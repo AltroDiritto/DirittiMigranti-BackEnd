@@ -1,0 +1,20 @@
+﻿<Properties StartupConfiguration="{513F4C99-4F0A-4C2B-A8A4-4FA2F47949B0}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DirittoMigrantiAPI/Controllers/LoginController.cs">
+    <Files>
+      <File FileName="DirittoMigrantiAPI/Models/User.cs" Line="6" Column="106" />
+      <File FileName="DirittoMigrantiAPI/Controllers/UsersController.cs" Line="49" Column="21" />
+      <File FileName="DirittoMigrantiAPI/Controllers/LoginController.cs" Line="6" Column="34" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/leonardorignanese/Progetti/DirittiMigranti/DirittiMigranti-BackEnd/DirittoMigrantiAPI/DirittoMigrantiAPI/Controllers/UsersController.cs" relfile="DirittoMigrantiAPI/Controllers/UsersController.cs" line="33" column="1" />
+      <Breakpoint file="/Users/leonardorignanese/Progetti/DirittiMigranti/DirittiMigranti-BackEnd/DirittoMigrantiAPI/DirittoMigrantiAPI/Controllers/UsersController.cs" relfile="DirittoMigrantiAPI/Controllers/UsersController.cs" line="47" column="1" />
+      <Breakpoint file="/Users/leonardorignanese/Progetti/DirittiMigranti/DirittiMigranti-BackEnd/DirittoMigrantiAPI/DirittoMigrantiAPI/Controllers/LoginController.cs" relfile="DirittoMigrantiAPI/Controllers/LoginController.cs" line="28" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.DirittoMigrantiAPI PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
