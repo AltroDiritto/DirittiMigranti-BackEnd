@@ -22,6 +22,5 @@
   <ItemGroup>
     <Compile Remove="Controllers\ValuesController.cs" />
     <Compile Remove="Controllers\TockenController.cs" />
-    <Compile Remove="Controllers\LoginController.cs" />
   </ItemGroup>
 </Project>
