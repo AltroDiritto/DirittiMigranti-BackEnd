@@ -9,6 +9,7 @@ using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using DirittoMigrantiAPI.Models.Contexts;
 
 namespace DirittoMigrantiAPI
 {
@@ -19,9 +20,8 @@ namespace DirittoMigrantiAPI
             //Usa un db interno
             services.AddDbContext<UserContext>(options =>
                 options.UseInMemoryDatabase("UserList"));
-            //options.ValidateScopes = false
-
-
+            services.AddDbContext<MessageExchangesContext>(options =>
+                options.UseInMemoryDatabase("ConversationsList"));
 
             //Configurare il middleware di autenticazione di ASP.NET Core per supportare i token JWT
             services.AddAuthentication(options =>

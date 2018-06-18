@@ -22,5 +22,10 @@
   <ItemGroup>
     <Compile Remove="Controllers\ValuesController.cs" />
     <Compile Remove="Controllers\TockenController.cs" />
+    <Compile Remove="Models\Person.cs" />
+    <Compile Remove="Models\Conversation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Models\MessageExchange.cs" />
   </ItemGroup>
 </Project>
