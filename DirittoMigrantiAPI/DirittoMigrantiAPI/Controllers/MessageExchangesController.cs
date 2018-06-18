@@ -33,6 +33,7 @@ namespace DirittoMigrantiAPI.Controllers
         private List<MessageExchange> GetAllMessageExchangesByLastUpdate()
         {
             return _context.MessageExchanges.OrderBy((message) => message.GetLastUpdate()).ToList();
+            //.ThenBy() starred by user
         }
 
         private List<MessageExchange> GetConversationsByUser(User user)
