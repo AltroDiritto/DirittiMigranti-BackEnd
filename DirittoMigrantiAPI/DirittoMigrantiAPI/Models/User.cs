@@ -6,7 +6,7 @@ namespace DirittoMigrantiAPI.Models
     //https://docs.microsoft.com/it-it/aspnet/core/tutorials/first-mvc-app/validation?view=aspnetcore-2.0
 
     //[Bind(Exclude = "Id")]
-    public class User
+    public abstract class User
     {
         // Id used as a key in the dictionary where all the users are stored
         public long Id { get; set; }

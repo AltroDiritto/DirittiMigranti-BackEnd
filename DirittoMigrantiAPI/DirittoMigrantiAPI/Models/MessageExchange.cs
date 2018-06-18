@@ -10,7 +10,7 @@ namespace DirittoMigrantiAPI.Models
         public long Id { get; set; }
 
         readonly public Operator owner;
-        string notes="";
+        string notes = "";
         private List<Message> messages = new List<Message>();
 
 
@@ -37,7 +37,7 @@ namespace DirittoMigrantiAPI.Models
             return notes;
         }
 
-        DateTime? GetLastUpdate()
+        public DateTime? GetLastUpdate()
         {
             if (messages?.Count > 0)
                 return messages[messages.Count - 1].creationDate;
