@@ -25,6 +25,7 @@ namespace DirittoMigrantiAPI.Models
         bool ChangeState(bool newState)
         {
             this.IsActive = newState;
+           
             return this.IsActive;
         }
     }

@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using DirittoMigrantiAPI.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+﻿using System;
 using System.Text;
-using System;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+using DirittoMigrantiAPI.Models;
 using DirittoMigrantiAPI.Models.Contexts;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DirittoMigrantiAPI
 {
@@ -19,7 +17,8 @@ namespace DirittoMigrantiAPI
         {
             //Usa un db interno
             services.AddDbContext<UserContext>(options =>
-                options.UseInMemoryDatabase("UserList"));
+                                               options.UseInMemoryDatabase("UserList"));
+
             services.AddDbContext<MessageExchangesContext>(options =>
                 options.UseInMemoryDatabase("ConversationsList"));
 

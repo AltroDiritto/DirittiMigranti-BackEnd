@@ -28,6 +28,7 @@ namespace DirittoMigrantiAPI.Controllers
         //oppure internamente da CreatedAtRoute("GetUser", new { id = {id} }, user);
         public IActionResult GetById(long id)
         {
+          
             var item = _context.Users.Find(id);
             if (item == null)
             {

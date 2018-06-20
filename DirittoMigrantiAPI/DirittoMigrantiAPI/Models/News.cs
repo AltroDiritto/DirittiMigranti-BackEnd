@@ -3,16 +3,19 @@ namespace DirittoMigrantiAPI.Models
 {
     public class News : TextContent
     {
+        string title;
         bool isPublished;
         //comments
 
-        public News(Consultant author, string title, string text) : base(author, title, text, "")
+        public News(Consultant author, string title, string text) : base(author, text, "")
         {
+            this.title = title;
             isPublished = false;
         }
 
-        public News(Consultant author, string title, string text, string attachmentUrl) : base(author, title, text, attachmentUrl)
+        public News(Consultant author, string title, string text, string attachmentUrl) : base(author, text, attachmentUrl)
         {
+            this.title = title;
             isPublished = false;
         }
 
