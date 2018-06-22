@@ -1,62 +1,68 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DirittoMigrantiAPI.Models;
-using DirittoMigrantiAPI.Models.Contexts;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace DirittoMigrantiAPI.Controllers
 {
     public class MessageExchangesController : Controller
     {
-        private readonly MessageExchangesContext _context;
-        public MessageExchangesController(MessageExchangesContext context) { _context = context; }
+        private readonly DbSet<MessageExchange> messageExchanges;
 
-        private MessageExchange NewConversation(Message message)
+        public MessageExchangesController(DbSet<MessageExchange> messageExchanges)
+        //è lecito che vengano passati dal costruttore?
+        { this.messageExchanges = messageExchanges; }
+
+        protected MessageExchange NewConversation(Message message)
         {
             if (!(message.author is Operator)) return null;//todo gestire
 
             MessageExchange conversation = new MessageExchange(message);
-            _context.MessageExchanges.Add(conversation);
-            _context.SaveChanges();
+            messageExchanges.Add(conversation);
 
             return conversation;
         }
 
-        private MessageExchange GetMessageExchange(User user, long MessageExchangeId)
+        protected MessageExchange GetMessageExchange(long MessageExchangeId)
         {
+            return messageExchanges.Find(MessageExchangeId);
+        }
+
+        protected MessageExchange GetMessageExchange(User user, long MessageExchangeId)
+        {
+            MessageExchange messageExchange = GetMessageExchange(MessageExchangeId);
             //TODO controllare chi lo chiama
-            MessageExchange messageExchange = _context.MessageExchanges.Find(MessageExchangeId);
             return messageExchange;
         }
 
-        private List<MessageExchange> GetAllMessageExchangesByLastUpdate()
+        protected List<MessageExchange> GetAllMessageExchangesByLastUpdate()
         {
-            return _context.MessageExchanges.OrderBy((conversation) => conversation.GetLastUpdate()).ToList();
+            return messageExchanges.OrderBy((conversation) => conversation.GetLastUpdate()).ToList();
             //.ThenBy() starred by user
         }
 
-        private List<MessageExchange> GetConversationsByUser(User user)
+        protected List<MessageExchange> GetConversationsByUser(User user)
         {
-            return _context.MessageExchanges.Where((conversation) => conversation.IsThisUserInTheConversation(user)).ToList();
+            return messageExchanges.Where((conversation) => conversation.IsThisUserInTheConversation(user)).ToList();
         }
 
-        private List<MessageExchange> GetConversationsByOwner(User user)
+        protected List<MessageExchange> GetConversationsByOwner(User user)
         {
-            return _context.MessageExchanges.Where((conversation) => conversation.IsThisUserTheOwner(user)).ToList();
+            if (user is Consultant) return null;
+
+            return messageExchanges.Where((conversation) => conversation.IsThisUserTheOwner(user)).ToList();
         }
 
-        private bool AddMessageToConversation(long MessageExchangeId, Message message)
+        protected bool AddMessageToConversation(long MessageExchangeId, Message message)
         {
             //TODO controllare chi lo chiama
-            return _context.MessageExchanges.Find(MessageExchangeId).AddMessage(message);
+            return GetMessageExchange(MessageExchangeId).AddMessage(message);
         }
 
-        private string EditNotesInConversation(long MessageExchangeId, string notes)
+        protected string EditNotesInConversation(long MessageExchangeId, string notes)
         {
-            return _context.MessageExchanges.Find(MessageExchangeId).EditNotes(notes);
+            return GetMessageExchange(MessageExchangeId).EditNotes(notes);
         }
     }
 }

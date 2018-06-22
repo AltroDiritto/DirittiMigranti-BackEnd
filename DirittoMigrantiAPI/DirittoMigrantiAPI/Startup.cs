@@ -15,13 +15,21 @@ namespace DirittoMigrantiAPI
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            //Usa un db interno
+            #region Contexts
+            //List of Consultant and Operators
             services.AddDbContext<UserContext>(options =>
                                                options.UseInMemoryDatabase("UserList"));
 
+            //List of Conversations with Messages
             services.AddDbContext<MessageExchangesContext>(options =>
-                options.UseInMemoryDatabase("ConversationsList"));
+                                                           options.UseInMemoryDatabase("ConversationsList"));
 
+            //List of News and Practices
+            services.AddDbContext<ContentContext>(options =>
+                                                  options.UseInMemoryDatabase("ContentsList"));
+            #endregion
+
+            #region Middleware
             //Configurare il middleware di autenticazione di ASP.NET Core per supportare i token JWT
             services.AddAuthentication(options =>
             {
@@ -45,6 +53,7 @@ namespace DirittoMigrantiAPI
                     ClockSkew = TimeSpan.Zero
                 };
             });
+            #endregion
 
             services.AddMvc();
         }
@@ -54,29 +63,30 @@ namespace DirittoMigrantiAPI
             app.UseMiddleware<JwtTokenMiddleware>();
             app.UseAuthentication();
 
-
-            //DEBUG
-            var context = serviceProvider.GetRequiredService<UserContext>();
-            AddTestData(context);
+#if DEBUG
+            var userContext = serviceProvider.GetRequiredService<UserContext>();
+            AddTestData(userContext);
+#endif
 
             app.UseMvc();
         }
 
         private static void AddTestData(UserContext context)
         {
-            var testUser1 = new User
+            Operator @operator = new Operator
             {
                 Username = "utente1",
-                Password = "utente1"
+                Password = "utente1",
+                IsActive = true
             };
-            context.Users.Add(testUser1);
+            context.Users.Add(@operator);
 
-            var testUser2 = new User
+            Consultant consultant = new Consultant
             {
                 Username = "utente2",
                 Password = "utente2"
             };
-            context.Users.Add(testUser2);
+            context.Users.Add(consultant);
 
             context.SaveChanges();
         }

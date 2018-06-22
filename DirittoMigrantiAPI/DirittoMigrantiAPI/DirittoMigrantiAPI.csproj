@@ -7,8 +7,13 @@
   <ItemGroup>
     <Folder Include="wwwroot\" />
     <Folder Include="Models\" />
-    <Folder Include="Models\Contexts\" />
-    <Folder Include="Models\Middlewares\" />
+    <Folder Include="Contexts\" />
+    <Folder Include="Models\Auth\Middlewares\" />
+    <Folder Include="API\" />
+    <Folder Include="Models\Users\" />
+    <Folder Include="Models\Auth\" />
+    <Folder Include="Models\Content\" />
+    <Folder Include="Models\MessageExchange\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +29,8 @@
     <Compile Remove="Controllers\TockenController.cs" />
     <Compile Remove="Models\Person.cs" />
     <Compile Remove="Models\Conversation.cs" />
+    <Compile Remove="Models\Contexts\ConsultantContext.cs" />
+    <Compile Remove="Controllers\ConsultantController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Models\MessageExchange.cs" />
