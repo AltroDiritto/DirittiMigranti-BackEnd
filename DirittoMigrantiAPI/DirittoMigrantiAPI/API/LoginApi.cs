@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Security.Claims;
 using DirittoMigrantiAPI.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.API
 {
     //todo cambiare nome
-    [Route("api/[controller]")]
+    [Route("api/login")]
     public class LoginApi : Controller
     {
+        //TODO username e pw divisi da altre info
+
         private readonly UserContext _context;
 
         public LoginApi(UserContext context)
@@ -40,6 +44,11 @@ namespace DirittoMigrantiAPI.API
 
             //Non è necessario creare il token qui, lo possiamo creare da un middleware (perchè?)
             return NoContent();
+        }
+
+        private bool CheckCredentials(string username, string password)
+        {
+            throw new NotImplementedException();
         }
     }
 }

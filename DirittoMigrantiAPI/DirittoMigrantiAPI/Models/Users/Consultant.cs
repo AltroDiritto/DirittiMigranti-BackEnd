@@ -7,9 +7,14 @@ namespace DirittoMigrantiAPI.Models
     {
         List<MessageExchange> starredConversations;
 
-        public Consultant() : base()
+        public Consultant():base(){}
+
+        public Consultant(string name, string surname, string email ) : base()
         {
-            //da caricare da db
+            this.Name = name;
+            this.Surname = surname;
+            this.Email = email;
+
             starredConversations = new List<MessageExchange>();
         }
 

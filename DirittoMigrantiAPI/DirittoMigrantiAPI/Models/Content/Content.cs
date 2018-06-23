@@ -1,19 +1,22 @@
 ﻿using System;
 namespace DirittoMigrantiAPI.Models
 {
-    public abstract class TextContent
+    public abstract class Content
     {
-        public readonly User author;
+        public readonly User writer;
         public readonly DateTime creationDate;
-       
+
+        string title;
         string text;
         string attachmentUrl;
+
         DateTime lastTextUpdate;
 
-        public TextContent(User author, string text, string attachmentUrl)
+        public Content(User writer, string title, string text, string attachmentUrl)
         {
-            this.author = author;
-       
+            this.writer = writer;
+            this.title = title;
+
             UpdateText(text);
             this.attachmentUrl = attachmentUrl;
             creationDate = DateTime.Now;
@@ -24,7 +27,7 @@ namespace DirittoMigrantiAPI.Models
             //TODO controllo autore
             this.text = text;
             lastTextUpdate = DateTime.Now;
-            return text;
+            return this.text;
         }
     }
 }

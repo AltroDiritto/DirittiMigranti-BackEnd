@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DirittoMigrantiAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,28 +13,26 @@ namespace DirittoMigrantiAPI.Controllers
 
         public MessageExchangesController(DbSet<MessageExchange> messageExchanges)
         //è lecito che vengano passati dal costruttore?
-        { this.messageExchanges = messageExchanges; }
-
-        protected MessageExchange NewConversation(Message message)
         {
-            if (!(message.author is Operator)) return null;//todo gestire
+            this.messageExchanges = messageExchanges;
+        }
 
-            MessageExchange conversation = new MessageExchange(message);
-            messageExchanges.Add(conversation);
+        public MessageExchange NewConversation(Message message)
+        {
+            try
+            {
+                MessageExchange conversation = new MessageExchange(message);
+                messageExchanges.Add(conversation);
 
-            return conversation;
+                return conversation;
+            }
+            catch (ArgumentException) { return null; }
         }
 
         protected MessageExchange GetMessageExchange(long MessageExchangeId)
         {
             return messageExchanges.Find(MessageExchangeId);
-        }
-
-        protected MessageExchange GetMessageExchange(User user, long MessageExchangeId)
-        {
-            MessageExchange messageExchange = GetMessageExchange(MessageExchangeId);
-            //TODO controllare chi lo chiama
-            return messageExchange;
+            //return messageExchanges.First(mn => mn.Id == MessageExchangeId);
         }
 
         protected List<MessageExchange> GetAllMessageExchangesByLastUpdate()
@@ -45,6 +44,11 @@ namespace DirittoMigrantiAPI.Controllers
         protected List<MessageExchange> GetConversationsByUser(User user)
         {
             return messageExchanges.Where((conversation) => conversation.IsThisUserInTheConversation(user)).ToList();
+        }
+
+        protected string GetNotes(long id)
+        {
+            return GetMessageExchange(id).Notes;
         }
 
         protected List<MessageExchange> GetConversationsByOwner(User user)
@@ -60,7 +64,7 @@ namespace DirittoMigrantiAPI.Controllers
             return GetMessageExchange(MessageExchangeId).AddMessage(message);
         }
 
-        protected string EditNotesInConversation(long MessageExchangeId, string notes)
+        public string EditNotesInConversation(long MessageExchangeId, string notes)
         {
             return GetMessageExchange(MessageExchangeId).EditNotes(notes);
         }

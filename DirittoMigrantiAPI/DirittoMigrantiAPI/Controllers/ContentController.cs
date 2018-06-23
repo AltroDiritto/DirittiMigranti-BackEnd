@@ -5,25 +5,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DirittoMigrantiAPI.Controllers
 {
-    public class ContentController : Controller, INewsController
+    public class ContentController : Controller//, INewsController
     {
-        private readonly DbSet<TextContent> contents;
-        public ContentController(DbSet<TextContent> contents)
+        private readonly DbSet<Content> contents;
+        public ContentController(DbSet<Content> contents)
         {
             this.contents = contents;
+        }
+
+        private Content GetTextContent(long id)
+        {
+            return contents.Find(id);
+        }
+
+        private Content NewTextContent(Content textContent)
+        {
+            if (textContent == null) return null;
+
+            contents.Add(textContent);
+            return textContent;
         }
 
         #region News
         protected News GetNews(long id)
         {
-            return (News)contents.Find(id);
+            return (News)GetTextContent(id);
         }
 
         protected News NewNews()//TODO add parameters
         {
             News news = new News(null, null, null);
-            contents.Add(news);
-            return news;
+            return (News)NewTextContent(news);
         }
         #endregion
 

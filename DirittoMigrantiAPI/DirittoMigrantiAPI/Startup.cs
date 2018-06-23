@@ -73,18 +73,18 @@ namespace DirittoMigrantiAPI
 
         private static void AddTestData(UserContext context)
         {
-            Operator @operator = new Operator
+            Operator operator1 = new Operator
             {
                 Username = "utente1",
                 Password = "utente1",
                 IsActive = true
             };
-            context.Users.Add(@operator);
+            context.Users.Add(operator1);
 
             Consultant consultant = new Consultant
             {
                 Username = "utente2",
-                Password = "utente2"
+                Password = "utente2",
             };
             context.Users.Add(consultant);
 

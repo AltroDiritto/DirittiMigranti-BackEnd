@@ -1,31 +1,28 @@
 ﻿using System;
 namespace DirittoMigrantiAPI.Models
 {
-    public class News : TextContent
+    public class News : Content
     {
-        string title;
-        bool isPublished;
-        //comments
+        public bool IsPublished { get; private set; }
 
-        public News(Consultant author, string title, string text) : base(author, text, "")
+        public News(Consultant writer, string title, string text) : base(writer, title, text, "")
         {
-            this.title = title;
-            isPublished = false;
+            IsPublished = false;
         }
 
-        public News(Consultant author, string title, string text, string attachmentUrl) : base(author, text, attachmentUrl)
+        public News(Consultant writer, string title, string text, string attachmentUrl) : base(writer, title, text, attachmentUrl)
         {
-            this.title = title;
-            isPublished = false;
+            IsPublished = false;
         }
 
-        public void Publish(){
-            isPublished = true;
+        public void Publish()
+        {
+            IsPublished = true;
         }
 
         public void Hide()
         {
-            isPublished = false;
+            IsPublished = false;
         }
     }
 }

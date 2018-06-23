@@ -17,15 +17,22 @@ namespace DirittoMigrantiAPI.Models
         [Required]
         public string Location { get; set; }
 
-        public Operator() : base()
+        public Operator() : base() { }
+
+        public Operator(string name, string surname, string email, string fiscalCode, string job, string location) : base()
         {
-            //TODO
+            this.Name = name;
+            this.Surname = surname;
+            this.Email = email;
+            this.FiscalCode = fiscalCode;
+            this.Job = job;
+            this.Location = location;
         }
 
-        bool ChangeState(bool newState)
+        public bool ChangeState(bool newState)
         {
             this.IsActive = newState;
-           
+
             return this.IsActive;
         }
     }

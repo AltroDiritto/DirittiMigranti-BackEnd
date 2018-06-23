@@ -10,6 +10,6 @@ namespace DirittoMigrantiAPI.Models.Contexts
         {
         }
 
-        public DbSet<TextContent> Contents { get; set; }
+        public DbSet<Content> Contents { get; set; }
     }
 }

@@ -23,14 +23,24 @@ namespace DirittoMigrantiAPI.API
         [HttpGet("getMessageExchange/{id}", Name = "GetMessageExchange")]
         public IActionResult GetById(long id)
         {
-            var messageExchange = context.MessageExchanges.Find(id);
+            //TODO ottenere lo user 
+            Consultant user=null;
+
+            var messageExchange = GetMessageExchange(id);
             if (messageExchange == null)
             {
                 return NotFound();
             }
-            return Ok(messageExchange);
+
+            if (user is Consultant || messageExchange.IsThisUserTheOwner(user))
+            {
+                return Ok(messageExchange);
+            }
+            else return NotFound();
         }
 
+        [Authorize(Roles = "Manager,Administrator")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         //TODO controllo se è un'operatore
         public IActionResult Create([FromBody] Message message)

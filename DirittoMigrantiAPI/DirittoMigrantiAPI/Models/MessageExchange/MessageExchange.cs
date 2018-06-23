@@ -11,15 +11,18 @@ namespace DirittoMigrantiAPI.Models
 
         public readonly DateTime creationDate;
         readonly public Operator conversationOwner;
-        string notes = "";
+        public string Notes { get; private set; }
+    
         private List<Message> messages = new List<Message>();
 
 
         public MessageExchange(Message message)
         {
-            messages.Add(message);
+            if (!(message.author is Operator)) throw new ArgumentException("");
+
             //se il messaggio è di un consulente, crasha il cast
             conversationOwner = (Operator)message.author;
+            messages.Add(message);
             creationDate = DateTime.Now;
         }
 
@@ -36,7 +39,7 @@ namespace DirittoMigrantiAPI.Models
         public string EditNotes(string notes)
         {
             //viene controllato nel controller prima di essere chiamato
-            this.notes = notes;
+            this.Notes = notes;
             return notes;
         }
 

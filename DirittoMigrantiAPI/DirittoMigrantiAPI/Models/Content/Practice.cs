@@ -1,20 +1,17 @@
 ﻿using System;
 namespace DirittoMigrantiAPI.Models
 {
-    public class Practice : TextContent
+    public class Practice : Content
     {
-        string title;
         bool isPrivate;
 
-        public Practice(Consultant author, string title, string text, bool isPrivate) : base(author, text, "")
+        public Practice(Consultant writer, string title, string text, bool isPrivate) : base(writer, title, text, "")
         {
-            this.title = title;
             this.isPrivate = isPrivate;
         }
 
-        public Practice(Consultant author, string title, string text, string attachmentUrl, bool isPrivate) : base(author, text, attachmentUrl)
+        public Practice(Consultant writer, string title, string text, string attachmentUrl, bool isPrivate) : base(writer, title, text, attachmentUrl)
         {
-            this.title = title;
             this.isPrivate = isPrivate;
         }
 
