@@ -63,16 +63,17 @@ namespace DirittoMigrantiAPI
             app.UseMiddleware<JwtTokenMiddleware>();
             app.UseAuthentication();
 
-#if DEBUG
+            #if DEBUG
             var userContext = serviceProvider.GetRequiredService<UserContext>();
             AddTestData(userContext);
-#endif
+            #endif
 
             app.UseMvc();
         }
 
         private static void AddTestData(UserContext context)
         {
+
             Operator operator1 = new Operator
             {
                 Username = "utente1",

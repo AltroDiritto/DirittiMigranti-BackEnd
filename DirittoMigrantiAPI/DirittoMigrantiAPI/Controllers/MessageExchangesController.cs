@@ -17,7 +17,7 @@ namespace DirittoMigrantiAPI.Controllers
             this.messageExchanges = messageExchanges;
         }
 
-        public MessageExchange NewConversation(Message message)
+        protected MessageExchange NewConversation(Message message)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace DirittoMigrantiAPI.Controllers
             //return messageExchanges.First(mn => mn.Id == MessageExchangeId);
         }
 
-        protected List<MessageExchange> GetAllMessageExchangesByLastUpdate()
+        protected List<MessageExchange> GetAllMessageExchangesOrderByLastUpdate()
         {
             return messageExchanges.OrderBy((conversation) => conversation.GetLastUpdate()).ToList();
             //.ThenBy() starred by user
@@ -64,9 +64,13 @@ namespace DirittoMigrantiAPI.Controllers
             return GetMessageExchange(MessageExchangeId).AddMessage(message);
         }
 
-        public string EditNotesInConversation(long MessageExchangeId, string notes)
+        protected string EditNotesInConversation(long MessageExchangeId, string notes)
         {
             return GetMessageExchange(MessageExchangeId).EditNotes(notes);
+        }
+
+        protected void Log(string message, User user){
+            
         }
     }
 }

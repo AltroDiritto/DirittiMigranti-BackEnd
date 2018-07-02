@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     public class UsersController : Controller
     {
         private readonly UserContext _context;

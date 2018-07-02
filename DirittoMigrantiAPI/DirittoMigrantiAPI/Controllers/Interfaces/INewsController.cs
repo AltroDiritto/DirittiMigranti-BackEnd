@@ -4,8 +4,8 @@ namespace DirittoMigrantiAPI.Controllers
 {
     public interface INewsController
     {
-        News GetNews(long id);
-
-        News NewNews();
+        public News GetNews(long id);
+        public bool DeleteNews(long contentId);
+        public News NewNews();
     }
 }

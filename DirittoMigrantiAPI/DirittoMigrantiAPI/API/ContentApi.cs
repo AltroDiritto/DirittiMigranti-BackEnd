@@ -2,6 +2,7 @@
 using DirittoMigrantiAPI.Controllers;
 using DirittoMigrantiAPI.Models;
 using DirittoMigrantiAPI.Models.Contexts;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.API
 {
@@ -11,6 +12,14 @@ namespace DirittoMigrantiAPI.API
         public ContentApi(ContentContext context) : base(context.Contents)
         { _context = context; }
 
+
+        [HttpPost]
+        public IActionResult SetState(bool newState){
+
+
+
+            return BadRequest();
+        }
 
     }
 }

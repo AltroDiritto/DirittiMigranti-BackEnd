@@ -3,6 +3,7 @@ namespace DirittoMigrantiAPI.Models
 {
     public abstract class Content
     {
+        public readonly int id;
         public readonly User writer;
         public readonly DateTime creationDate;
 

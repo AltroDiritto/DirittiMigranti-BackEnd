@@ -39,8 +39,7 @@ namespace DirittoMigrantiAPI.Controllers
             users.Add(@operator);
             return @operator;
         }
-
-        protected bool ChangePrivacy(long operatorId, bool newState)
+        protected bool ChangeState(long operatorId, bool newState)
         {
             Operator _operator = GetOperator(operatorId);
             return _operator.ChangeState(newState);
