@@ -61,6 +61,15 @@ namespace DirittoMigrantiAPI.Controllers
 
         #endregion
 
+
+        protected bool DeleteNews(long contentId)
+        {
+            var content = contents.Find(contentId);
+            contents.Remove(content);
+            var check = contents.Find(contentId);
+            return check != null;
+        }
+
         //edit news
         //edit pratica
 

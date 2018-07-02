@@ -29,7 +29,7 @@ namespace DirittoMigrantiAPI.Controllers
         public IActionResult GetById(long id)
         {
           
-            var item = _context.Users.Find(id);
+            User item = _context.Users.Find(id);
             if (item == null)
             {
                 return NotFound();

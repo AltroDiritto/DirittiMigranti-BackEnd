@@ -17,9 +17,7 @@ namespace DirittoMigrantiAPI.API
         public IActionResult SetState(bool newState){
 
 
-
             return BadRequest();
         }
-
     }
 }
