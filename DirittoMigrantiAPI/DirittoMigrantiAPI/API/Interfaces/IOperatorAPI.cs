@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using DirittoMigrantiAPI.Models;
 
-namespace DirittoMigrantiAPI.API.Interfaces
+namespace DirittoMigrantiAPI.API
 {
-    interface IOperatorAPI
+    internal interface IOperatorAPI
     {
+        IActionResult NewOperator(Operator @operator);
+        IActionResult GetOperator(long userId);
+        IActionResult GetAllOperators();
+        IActionResult SetOperatorState(long userId, bool newState);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DirittoMigrantiAPI.Models;
 
-namespace DirittoMigrantiAPI.Controllers.Interfaces
+namespace DirittoMigrantiAPI.Controllers
 {
-    interface IOperatorController
+    public interface IOperatorController
     {
+        Operator GetOperator(long userId);
+        Operator NewOperator(Operator @operator);
+        bool ChangeState(long operatorId, bool newState);
     }
 }

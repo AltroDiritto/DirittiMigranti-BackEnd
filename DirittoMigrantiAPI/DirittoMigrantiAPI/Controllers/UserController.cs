@@ -6,45 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DirittoMigrantiAPI.Controllers
 {
-    public class UserController : Controller
+    public class UserController : Controller, IConsultantController, IOperatorController
     {
         private readonly DbSet<User> users;
         public UserController(DbSet<User> users)
         {
             this.users = users;
         }
-
-        private User GetUser(long id)
-        {
-            return users.Find(id);
-        }
-
-        #region Consultant
-        protected Consultant GetConsultant(long id)
-        {
-            return (Consultant)GetUser(id);
-        }
-        #endregion
-
-
-        #region Operator
-        protected Operator GetOperator(long id)
-        {
-            return (Operator)GetUser(id);
-        }
-        protected Operator NewOperator(Operator @operator)
-        {
-            if (users.Contains(@operator)) return null;
-
-            users.Add(@operator);
-            return @operator;
-        }
-        protected bool ChangeState(long operatorId, bool newState)
-        {
-            Operator _operator = GetOperator(operatorId);
-            return _operator.ChangeState(newState);
-        }
-        #endregion
 
         private bool CheckCredentials(string username, string password)
         {
@@ -54,5 +22,45 @@ namespace DirittoMigrantiAPI.Controllers
 
             return user != null;
         }
+
+        private User GetUser(long id)
+        {
+            return users.Find(id);
+        }
+
+        #region Consultant
+        public Consultant GetConsultant(long id)
+        {
+            return (Consultant)GetUser(id);
+        }
+        #endregion
+
+
+        #region Operator
+        public Operator GetOperator(long id)
+        {
+            return (Operator)GetUser(id);
+        }
+
+        public Operator NewOperator(Operator @operator)
+        {
+            if (users.Contains(@operator)) return null;
+
+            users.Add(@operator);
+            return @operator;
+        }
+
+        public bool ChangeState(long operatorId, bool newState)
+        {
+            Operator _operator = GetOperator(operatorId);
+            return _operator.ChangeState(newState);
+        }
+
+        public DbSet<User> GetAllOperator()
+        {
+            //TODO
+            return null;
+        }
+        #endregion
     }
 }

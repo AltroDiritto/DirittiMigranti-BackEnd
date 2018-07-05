@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DirittoMigrantiAPI.Models;
 
-namespace DirittoMigrantiAPI.Controllers.Interfaces
+namespace DirittoMigrantiAPI.Controllers
 {
-    interface IConsultantController
+    public interface IConsultantController
     {
-
+        Consultant GetConsultant(long userId);
     }
 }
 
