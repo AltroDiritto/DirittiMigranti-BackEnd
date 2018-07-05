@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DirittoMigrantiAPI.Controllers
 {
-    public class MessageExchangesController : Controller
+    public class MessageExchangesController : Controller, IConversationHandler, IConversationController
     {
         private readonly DbSet<MessageExchange> messageExchanges;
 
@@ -17,7 +17,8 @@ namespace DirittoMigrantiAPI.Controllers
             this.messageExchanges = messageExchanges;
         }
 
-        protected MessageExchange NewConversation(Message message)
+        #region CONVERSATION CONTROLLER        
+        public MessageExchange NewConversation(Message message)
         {
             try
             {
@@ -28,49 +29,70 @@ namespace DirittoMigrantiAPI.Controllers
             }
             catch (ArgumentException) { return null; }
         }
-
-        protected MessageExchange GetMessageExchange(long MessageExchangeId)
+        
+        public MessageExchange GetMessageExchange(long MessageExchangeId)
         {
             return messageExchanges.Find(MessageExchangeId);
             //return messageExchanges.First(mn => mn.Id == MessageExchangeId);
         }
 
-        protected List<MessageExchange> GetAllMessageExchangesOrderByLastUpdate()
+        public bool AddMessageToConversation(long MessageExchangeId, Message message)
         {
-            return messageExchanges.OrderBy((conversation) => conversation.GetLastUpdate()).ToList();
-            //.ThenBy() starred by user
+            //TODO controllare chi lo chiama
+            return GetMessageExchange(MessageExchangeId).AddMessage(message);
         }
 
-        protected List<MessageExchange> GetConversationsByUser(User user)
-        {
-            return messageExchanges.Where((conversation) => conversation.IsThisUserInTheConversation(user)).ToList();
-        }
-
-        protected string GetNotes(long id)
+        public string GetNotes(long id)
         {
             return GetMessageExchange(id).Notes;
         }
 
-        protected List<MessageExchange> GetConversationsByOwner(User user)
+        public string EditNotesInConversation(long MessageExchangeId, string notes)
+        {
+            return GetMessageExchange(MessageExchangeId).EditNotes(notes);
+        }
+        #endregion
+
+        #region CONVERSATION HANDLER        
+        public List<MessageExchange> GetConversationsByUser(User user)
+        {
+            return messageExchanges.Where((conversation) => conversation.IsThisUserInTheConversation(user)).ToList();
+        }
+        
+        public List<MessageExchange> GetConversationsByOwner(User user)
         {
             if (user is Consultant) return null;
 
             return messageExchanges.Where((conversation) => conversation.IsThisUserTheOwner(user)).ToList();
         }
 
-        protected bool AddMessageToConversation(long MessageExchangeId, Message message)
+        public List<MessageExchange> GetAllMessageExchangesOrderByLastUpdate()
         {
-            //TODO controllare chi lo chiama
-            return GetMessageExchange(MessageExchangeId).AddMessage(message);
+            return messageExchanges.OrderBy((conversation) => conversation.GetLastUpdate()).ToList();
+            //.ThenBy() starred by user
         }
 
-        protected string EditNotesInConversation(long MessageExchangeId, string notes)
+        public List<MessageExchange> GetAllMessageExchangeByCreationDate()
         {
-            return GetMessageExchange(MessageExchangeId).EditNotes(notes);
-        }
+            throw new NotImplementedException();
+        }      
+        #endregion
 
+        //LOG
         protected void Log(string message, User user){
-            
+            throw new NotImplementedException();
         }
+
+        //Qui molto probabilmente dovrebbe essere "Star"
+        public Consultant StartConversation(long conversationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<MessageExchange> GetstarredConversations()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.API
 {
-    public class UserApi : UserController
+    public class UserApi :  UserController
     {
         private readonly UserContext context;
 

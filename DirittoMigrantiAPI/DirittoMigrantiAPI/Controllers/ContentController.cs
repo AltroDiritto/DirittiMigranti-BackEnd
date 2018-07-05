@@ -5,20 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DirittoMigrantiAPI.Controllers
 {
-    public class ContentController : Controller//, INewsController
+    public class ContentController : Controller, INewsController, IPracticeController
     {
         private readonly DbSet<Content> contents;
+
+        //DA QUI PARTONO TUTTI I METODI IN COMUNE CON L'UML
         public ContentController(DbSet<Content> contents)
         {
             this.contents = contents;
         }
 
-        private Content GetTextContent(long id)
+        private Content GetContent(long id)
         {
             return contents.Find(id);
         }
 
-        private Content NewTextContent(Content textContent)
+        private Content NewContent(Content textContent)
         {
             if (textContent == null) return null;
 
@@ -26,55 +28,75 @@ namespace DirittoMigrantiAPI.Controllers
             return textContent;
         }
 
-        #region News
-        protected News GetNews(long id)
+        private bool DeleteContent(long contentId)
         {
-            return (News)GetTextContent(id);
+            throw new NotImplementedException();
+        }
+                   
+        #region NEWS 
+        public News GetNews(long id)
+        {
+            throw new NotImplementedException();
         }
 
-        protected News NewNews()//TODO add parameters
+        public News NewNews(News news)
         {
-            News news = new News(null, null, null);
-            return (News)NewTextContent(news);
-        }
-        #endregion
-
-        #region Practice
-        protected Practice GetPractice(long id)
-        {
-            return (Practice)contents.Find(id);
+            throw new NotImplementedException();
         }
 
-        protected Practice NewPractice()//TODO add parameters
+        public bool SetState(long contentId, bool isPublished)
         {
-            Practice practice = new Practice(null, null, null, false);
-            contents.Add(practice);
-            return practice;
+            throw new NotImplementedException();
         }
 
-        protected Practice EditState(long id, bool newState)
-        {
-            Practice practice = (Practice)contents.Find(id);
-            practice.ChangePrivacy(newState);
-            return practice;
-        }
-
-        #endregion
-
-
-        protected bool DeleteNews(long contentId)
+        public bool DeleteNews(long contentId)
         {
             var content = contents.Find(contentId);
             contents.Remove(content);
             var check = contents.Find(contentId);
             return check != null;
         }
+        #endregion
+        
+        #region PRACTICE        
+        public Practice GetPractice(long contentId)
+        {
+            throw new NotImplementedException();
+        }
 
-        //edit news
-        //edit pratica
+        public Practice NewPractice(Practice practice)
+        {
+            throw new NotImplementedException();
+        }
 
-        //cancella news
-        //cancella pratica
+        public bool SetPracticePrivacy(long contentId, bool newState)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeletePractice(long contentId)
+        {
+            var content = contents.Find(contentId);
+            contents.Remove(content);
+            var check = contents.Find(contentId);
+            return check != null;
+        }        
+        #endregion
+
+        //LOG
+        public void Log(string message, User user)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
+
+
+
+
+
 
     }
 }

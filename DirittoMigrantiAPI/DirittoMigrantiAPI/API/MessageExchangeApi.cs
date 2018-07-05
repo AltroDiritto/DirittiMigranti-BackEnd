@@ -18,26 +18,6 @@ namespace DirittoMigrantiAPI.API
             this.context = context;
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //NOTA: il Name serve per la chiamata da qua dentro.        
-        [HttpGet("getMessageExchange/{id}", Name = "GetMessageExchange")]
-        public IActionResult GetById(long id)
-        {
-            //TODO ottenere lo user 
-            Consultant user=null;
-
-            var messageExchange = GetMessageExchange(id);
-            if (messageExchange == null)
-            {
-                return NotFound();
-            }
-
-            if (user is Consultant || messageExchange.IsThisUserTheOwner(user))
-            {
-                return Ok(messageExchange);
-            }
-            else return NotFound();
-        }
 
         [Authorize(Roles = "Manager,Administrator")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -60,6 +40,63 @@ namespace DirittoMigrantiAPI.API
 
             // Invio come risposta le info dell'utente appena creato
             return CreatedAtRoute("GetMessageExchange", new { id = messageExchange.Id }, messageExchange);
+        }
+
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //NOTA: il Name serve per la chiamata da qua dentro.        
+        [HttpGet("getMessageExchange/{id}", Name = "GetMessageExchange")]
+        public IActionResult GetById(long id)
+        {
+            //TODO ottenere lo user 
+            Consultant user = null;
+
+            var messageExchange = GetMessageExchange(id);
+            if (messageExchange == null)
+            {
+                return NotFound();
+            }
+
+            if (user is Consultant || messageExchange.IsThisUserTheOwner(user))
+            {
+                return Ok(messageExchange);
+            }
+            else return NotFound();
+        }
+
+        public IActionResult GetListOrderedByLastUpdate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult GetListOrderedByCreationDate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult AddMessage(Message message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult GetNotes(long conversationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult EditNotes(long conversationId, string text)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult GetStarred()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult SetStarred(long conversationId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
