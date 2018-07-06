@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.Controllers
 {
+    //// http://localhost:????/api/users/
     [Route("api/users")]
     public class UsersController : Controller
     {
@@ -15,20 +16,20 @@ namespace DirittoMigrantiAPI.Controllers
         public UsersController(UserContext context) { _context = context; }
 
         #region GET
-        [HttpGet]
+        [HttpGet("getUsers")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //// Chiamo la GET su http://localhost:????/api/users/getUsers
         public List<User> GetAll()
         {
             return _context.Users.ToList();
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //NOTA: il Name serve per la chiamata da qua dentro.        
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]//NOTA: il Name serve per la chiamata da qua dentro.        
         [HttpGet("getUser/{id}", Name = "GetUser")]
-        //Viene chiamato da http://localhost:50156/api/users/getUser/{id}
+        //Viene chiamato da http://localhost:???/api/users/getUser/{id}
         //oppure internamente da CreatedAtRoute("GetUser", new { id = {id} }, user);
         public IActionResult GetById(long id)
         {
-          
             User item = _context.Users.Find(id);
             if (item == null)
             {
@@ -40,8 +41,9 @@ namespace DirittoMigrantiAPI.Controllers
 
         #region CREATE
         [HttpPost]
-        public IActionResult Create([FromBody] User user)
+        public IActionResult Create([FromBody] User user,[FromBody]News news)
         {
+            
             // Controllo se l'User passato ha i campi obbligatori compilati
             if (!ModelState.IsValid)
             {
@@ -62,6 +64,7 @@ namespace DirittoMigrantiAPI.Controllers
 
             // Invio come risposta le info dell'utente appena creato
             return CreatedAtRoute("GetUser", new { id = user.Id }, user);
+
         }
         #endregion
 

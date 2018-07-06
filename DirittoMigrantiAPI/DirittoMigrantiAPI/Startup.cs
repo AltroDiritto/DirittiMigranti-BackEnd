@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using DirittoMigrantiAPI.Models;
 using DirittoMigrantiAPI.Models.Contexts;
@@ -13,6 +14,9 @@ namespace DirittoMigrantiAPI
 {
     public class Startup
     {
+        static public List<User> users;
+
+
         public void ConfigureServices(IServiceCollection services)
         {
             #region Contexts
@@ -63,18 +67,28 @@ namespace DirittoMigrantiAPI
             app.UseMiddleware<JwtTokenMiddleware>();
             app.UseAuthentication();
 
-            #if DEBUG
+            #region DEBUG
             var userContext = serviceProvider.GetRequiredService<UserContext>();
-            AddTestData(userContext);
-            #endif
+            AddUserTestData(userContext);
+
+            var contentContext = serviceProvider.GetRequiredService<ContentContext>();
+
+
+            var conversationContext = serviceProvider.GetRequiredService<MessageExchangesContext>();
+
+            AddConversationTestData(conversationContext, userContext);
+            #endregion
+
 
             app.UseMvc();
         }
 
-        private static void AddTestData(UserContext context)
-        {
 
-            Operator operator1 = new Operator
+        private static void AddUserTestData(UserContext context)
+        {
+            users = new List<User>();
+
+            var operator1 = new Operator
             {
                 Username = "utente1",
                 Password = "utente1",
@@ -89,6 +103,23 @@ namespace DirittoMigrantiAPI
             };
             context.Users.Add(consultant);
 
+            context.SaveChanges();
+
+            users.Add(operator1);
+            users.Add(consultant);
+        }
+
+        private static void AddConversationTestData(MessageExchangesContext context, UserContext userContext)
+        {
+            Message firstMessage = new Message(users[0], "Testo di prova 1 messaggio");
+            MessageExchange conv = new MessageExchange(firstMessage);
+
+            Message secondMessage = new Message(users[1], "Testo secondo");
+            conv.AddMessage(secondMessage);
+
+            context.Add(conv);
+
+            //ricordatevi
             context.SaveChanges();
         }
     }
