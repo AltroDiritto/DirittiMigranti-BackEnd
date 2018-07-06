@@ -5,6 +5,8 @@ namespace DirittoMigrantiAPI.Models
     {
         public bool IsPublished { get; private set; }
 
+        public News() { }
+
         public News(Consultant writer, string title, string text) : base(writer, title, text, "")
         {
             IsPublished = false;

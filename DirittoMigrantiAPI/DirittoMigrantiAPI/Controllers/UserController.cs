@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DirittoMigrantiAPI.Models;
+using DirittoMigrantiAPI.Models.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,18 +10,21 @@ namespace DirittoMigrantiAPI.Controllers
     public class UserController : Controller, IConsultantController, IOperatorController
     {
         private readonly DbSet<User> users;
-        public UserController(DbSet<User> users)
+        private readonly DbSet<UserAuth> usersAuth;
+        public UserController(DbSet<User> users, DbSet<UserAuth> usersAuth)
         {
             this.users = users;
+            this.usersAuth = usersAuth;
         }
 
-        private bool CheckCredentials(string username, string password)
+        protected bool CheckCredentials(UserAuth userAuth)
         {
-            User user = null;
-            if (users.Any((u) => u.Username == username && u.Password == password))
-                user = users.Where((u) => u.Username == username && u.Password == password).First();
+            return usersAuth.Any((u) => u.CheckCredentials(userAuth));
+        }
 
-            return user != null;
+        protected long GetUserId(UserAuth userAuth)
+        {
+            return usersAuth.Where((u) => u.CheckCredentials(userAuth)).ToList()[0].UserId;
         }
 
         private User GetUser(long id)

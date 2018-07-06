@@ -4,17 +4,19 @@ namespace DirittoMigrantiAPI.Models
 {
     public class Operator : User
     {
-        [Required]
+        //  [Required]
         public bool IsActive { get; set; }
-        [Required]
+        // [Required]
         public string FiscalCode { get; set; }
-        [Required]
+        ///[Required]
         public string Job { get; set; }
-        [Required]
+        // [Required]
+        [Phone]
         public string Phone { get; set; }
-        [Required]
+        // [Required]
         public string Office { get; set; }
-        [Required]
+        //[Required]
+        
         public string Location { get; set; }
 
         public Operator() : base() { }

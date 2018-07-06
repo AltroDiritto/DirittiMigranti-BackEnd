@@ -1,22 +1,29 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace DirittoMigrantiAPI.Models
 {
-    public abstract class Content
+    public class Content
     {
-        public readonly int id;
+        // Id used as a key in the dictionary where all the users are stored
+        public long Id { get; set; }
+
         public readonly User writer;
         public readonly DateTime creationDate;
-
-        string title;
+                
+        [StringLength(100, MinimumLength = 2)]
+        public string Title { get; set; }
         string text;
         string attachmentUrl;
 
         DateTime lastTextUpdate;
 
+        public Content() { }
+
         public Content(User writer, string title, string text, string attachmentUrl)
         {
             this.writer = writer;
-            this.title = title;
+            this.Title = title;
 
             UpdateText(text);
             this.attachmentUrl = attachmentUrl;

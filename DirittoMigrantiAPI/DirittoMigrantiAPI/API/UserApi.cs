@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using DirittoMigrantiAPI.Controllers;
 using DirittoMigrantiAPI.Models;
@@ -9,21 +10,51 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.API
 {
+    [Route("api/user")]
     public class UserControllerAPI : UserController, IConsultantAPI, IOperatorAPI
     {
         private readonly UserContext context;
-
-        public UserControllerAPI(UserContext context) : base(context.Users)
+        public UserControllerAPI(UserContext context) : base(context.Users,context.UsersAuth)
         {
             this.context = context;
         }
 
-        public TokenRequest Login(User credentials)
+        // POST api/login
+        [Route("api/login")]
+        [HttpPost]
+        public IActionResult TryToLogin([FromBody] UserAuth userAuth)
         {
-            //TODO
-            return null;
+            //TokenRequest è una nostra classe contenente le proprietà Username e Password
+            //Avvisiamo il client se non ha fornito tali valori
+            if (!ModelState.IsValid)
+            {
+                View(userAuth);
+                return BadRequest();
+            }
+
+            //Lo avvisiamo anche se non ha fornito credenziali valide
+            if (!CheckCredentials(userAuth))
+                return Unauthorized();
+
+
+            //Ok, l'utente ha fornito credenziali valide, creiamogli una ClaimsIdentity
+            var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
+
+            //Aggiungiamo uno o più claim relativi all'utente loggato
+            long userId = GetUserId(userAuth);
+            User user = context.Users.Find(userId);
+
+            identity.AddClaim(new Claim(ClaimTypes.Role, user is Operator ? "Operator" : "Consultant"));
+            identity.AddClaim(new Claim(ClaimTypes.SerialNumber, userId.ToString()));
+
+            //Incapsuliamo l'identità in una ClaimsPrincipal l'associamo alla richiesta corrente
+            HttpContext.User = new ClaimsPrincipal(identity);
+
+            //Non è necessario creare il token qui, lo possiamo creare da un middleware (perchè?)
+            return NoContent();
         }
 
+        
         private IActionResult GetUser(long userId)
         {
             //TODO
@@ -46,6 +77,8 @@ namespace DirittoMigrantiAPI.API
 
         IActionResult IOperatorAPI.GetOperator(long userId)
         {
+            //string sn = (User as ClaimsPrincipal)?.FindFirst(ClaimTypes.SerialNumber)?.Value;
+
             //TODO
             throw new NotImplementedException();
         }
@@ -72,37 +105,10 @@ namespace DirittoMigrantiAPI.API
         #endregion
 
 
-        // POST api/login
-        [HttpPost]
-        public IActionResult TryToLogin([FromBody] TokenRequest tokenRequest)
-        {
-            //TokenRequest è una nostra classe contenente le proprietà Username e Password
-            //Avvisiamo il client se non ha fornito tali valori
-            if (!ModelState.IsValid)
-            {
-                View(tokenRequest);
-                return BadRequest();
-            }
+       
 
-            //Lo avvisiamo anche se non ha fornito credenziali valide
-            if (!CheckCredentials(tokenRequest.Username, tokenRequest.Password))
-                return Unauthorized();
 
-            //Ok, l'utente ha fornito credenziali valide, creiamogli una ClaimsIdentity
-            var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
-            //Aggiungiamo uno o più claim relativi all'utente loggato
-            identity.AddClaim(new Claim(ClaimTypes.Name, tokenRequest.Username));
-            //Incapsuliamo l'identità in una ClaimsPrincipal l'associamo alla richiesta corrente
-            HttpContext.User = new ClaimsPrincipal(identity);
+        //Non è necessario creare il token qui, lo possiamo creare da un middleware (perchè?)
 
-            //Non è necessario creare il token qui, lo possiamo creare da un middleware (perchè?)
-            return NoContent();
-        }
-
-        private bool CheckCredentials(string username, string password)
-        {
-            //TODO
-            return true;
-        }
     }
 }

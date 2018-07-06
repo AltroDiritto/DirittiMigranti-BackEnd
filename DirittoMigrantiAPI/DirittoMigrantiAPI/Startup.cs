@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DirittoMigrantiAPI.Models;
 using DirittoMigrantiAPI.Models.Contexts;
+using DirittoMigrantiAPI.Models.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,26 +16,26 @@ namespace DirittoMigrantiAPI
 {
     public class Startup
     {
-        static public List<User> users;
-        static public List<News> news;  //Alternativa: fare una lista unica di Content, così mi pare più ordinato
-        static public List<Practice> practices;   //news e practice avrei potuto dichiararle anche dentro alle funzioni
-        
-
+        static List<User> users;
 
         public void ConfigureServices(IServiceCollection services)
         {
             #region Contexts
+            //TODO: la connectionstring e ogni altro parametro di configurazione
+            //andrebbero messi nel file appsettings.json
+            //Vedi: https://docs.microsoft.com/en-US/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1&tabs=basicconfiguration
+
             //List of Consultant and Operators
             services.AddDbContext<UserContext>(options =>
-                                               options.UseInMemoryDatabase("UserList"));
+                                               options.UseSqlite("Data Source=diritto-migranti-user.db"));
 
             //List of Conversations with Messages
             services.AddDbContext<MessageExchangesContext>(options =>
-                                                           options.UseInMemoryDatabase("ConversationsList"));
+                                                           options.UseSqlite(@"Data Source=diritto-migranti-msg.db"));
 
             //List of News and Practices
             services.AddDbContext<ContentContext>(options =>
-                                                  options.UseInMemoryDatabase("ContentsList"));
+                                                  options.UseSqlite(@"Data Source=diritto-migranti-content.db"));
             #endregion
 
             #region Middleware
@@ -72,16 +74,25 @@ namespace DirittoMigrantiAPI
 
             #region DEBUG
             var userContext = serviceProvider.GetRequiredService<UserContext>();
+            userContext.Database.EnsureCreated();
             AddUserTestData(userContext);
 
             var contentContext = serviceProvider.GetRequiredService<ContentContext>();
-            AddContentTestData(contentContext);
-            
+            contentContext.Database.EnsureCreated();
+            // AddContentTestData(contentContext);
+
             var conversationContext = serviceProvider.GetRequiredService<MessageExchangesContext>();
-            AddConversationTestData(conversationContext);
+            conversationContext.Database.EnsureCreated();
+            // AddConversationTestData(conversationContext);
+
+            var users = userContext.Users.ToList();
+            var contents = contentContext.Contents.ToList();
             #endregion
 
-
+            if (env.IsDevelopment())
+            {
+                app.AddEfDiagrams<UserContext>();
+            }
 
             app.UseMvc();
         }
@@ -91,21 +102,35 @@ namespace DirittoMigrantiAPI
         {
             users = new List<User>();
 
+            //creo utente
             var operator1 = new Operator
             {
-                Username = "utente1",
-                Password = "utente1",
+                Email = "utente18@example.com",
                 IsActive = true
             };
-            context.Users.Add(operator1);
+            var s = context.Users.Add(operator1);
 
+            //creo credenziali
+            var auth1 = new UserAuth();
+            auth1.Username = "a";
+            auth1.Password = "a";
+            auth1.UserId = s.Entity.Id;
+            context.UsersAuth.Add(auth1);
+
+
+            //creo utente
             Consultant consultant = new Consultant
             {
-                Username = "utente2",
-                Password = "utente2",
+                Email = "utente882@example.com"
             };
-            context.Users.Add(consultant);
-            
+            s=context.Users.Add(consultant);
+
+            //creo credenziali
+            var auth2 = new UserAuth();
+            auth2.Username = "b";
+            auth2.Password = "b";
+            auth2.UserId = s.Entity.Id;
+            context.UsersAuth.Add(auth2);
 
             context.SaveChanges();
 
@@ -114,12 +139,12 @@ namespace DirittoMigrantiAPI
         }
 
         private static void AddConversationTestData(MessageExchangesContext context)
-        {           
+        {
             Message firstMessage = new Message(users[0], "Testo di prova 1 messaggio");
             MessageExchange conv = new MessageExchange(firstMessage);
-                        
+
             Message secondMessage = new Message(users[1], "Testo secondo");
-           
+
             conv.AddMessage(secondMessage);
 
             context.MessageExchanges.Add(conv);
@@ -130,27 +155,21 @@ namespace DirittoMigrantiAPI
         //Questo vale sia per le news che per le pratiche @Gianluca (Entrambe sono content)
         private static void AddContentTestData(ContentContext context)
         {
-            news = new List<News>();
-            practices = new List<Practice>();
 
             News news1 = new News((Consultant)users[1], "Titolo news 1", "Lorem ipsum.....");
-            news.Add(news1);
             News news2 = new News((Consultant)users[1], "Titolo news 2", "Lorem ipsum....", "http://attachedURL.com/");
-            news.Add(news2);
-            news2.Publish();   //Perchè questo? @Gianluca
-            
-            context.Add(news);
+            news2.Publish();
 
-            context.SaveChanges(); //@Leo non so se basti chiamarlo una volta in fondo            
+            context.Contents.Add(news1);
+            context.Contents.Add(news2);
 
             Practice practice1 = new Practice((Consultant)users[1], "Titolo practica 1", "Lorem ipsum...", true);
-            practices.Add(practice1);
             Practice practice2 = new Practice((Consultant)users[1], "Titolo practica 2", "Lorem ipsum...", false);
-            practices.Add(practice2);
 
-            context.Add(practices);         
+            context.Contents.Add(practice1);
+            context.Contents.Add(practice1);
 
-            context.SaveChanges();   //Forse basta chiamare questo
+            context.SaveChanges();
         }
     }
 }

@@ -1,16 +1,23 @@
 using System.Linq;
+using DirittoMigrantiAPI.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DirittoMigrantiAPI.Models
 {
-    //DbContext represents the connection to the database
     public class UserContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserAuth> UsersAuth { get; set; }
+
         public UserContext(DbContextOptions<UserContext> options)
             : base(options)
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Consultant>().HasBaseType<User>();
+            modelBuilder.Entity<Operator>().HasBaseType<User>();
+        }
     }
 }

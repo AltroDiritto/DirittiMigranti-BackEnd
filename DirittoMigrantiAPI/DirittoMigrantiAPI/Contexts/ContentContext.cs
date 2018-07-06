@@ -5,11 +5,17 @@ namespace DirittoMigrantiAPI.Models.Contexts
 {
     public class ContentContext : DbContext
     {
+        public DbSet<Content> Contents { get; set; }
+
         public ContentContext(DbContextOptions<ContentContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Content> Contents { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<News>().HasBaseType<Content>();
+            modelBuilder.Entity<Practice>().HasBaseType<Content>();
+        }
     }
 }

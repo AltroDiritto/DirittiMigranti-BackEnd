@@ -13,7 +13,7 @@ namespace DirittoMigrantiAPI.API
     {
         private readonly MessageExchangesContext _context;
 
-        public MessageExchangeApi(MessageExchangesContext context) : base(context.MessageExchanges)
+        public MessageExchangeApi(MessageExchangesContext context, UserContext userContext) : base(context.MessageExchanges)
         {
             this._context = context;
         }
@@ -37,7 +37,7 @@ namespace DirittoMigrantiAPI.API
                 return BadRequest();
 
             // Salvo
-            _context.SaveChanges();
+            _context.SaveChanges();//TODO controlla eccezioni
 
             // Invio come risposta le info dell'utente appena creato
             return CreatedAtRoute("GetMessageExchange", new { id = messageExchange.Id }, messageExchange);

@@ -11,7 +11,7 @@ namespace DirittoMigrantiAPI.Controllers
     //// http://localhost:????/api/users/
     [Route("api/users")]
     public class UsersController : Controller
-    {
+    {/*
         private readonly UserContext _context;
         public UsersController(UserContext context) { _context = context; }
 
@@ -131,6 +131,7 @@ namespace DirittoMigrantiAPI.Controllers
     //public List<User> GetNameById()
     //{
     //    return _context.Users.ToList();
-    //}
+ */   //
+    }
 
 }

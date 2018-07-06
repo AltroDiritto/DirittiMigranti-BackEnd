@@ -5,6 +5,8 @@ namespace DirittoMigrantiAPI.Models
     {
         bool isPrivate;
 
+        public Practice() { }
+
         public Practice(Consultant writer, string title, string text, bool isPrivate) : base(writer, title, text, "")
         {
             this.isPrivate = isPrivate;
