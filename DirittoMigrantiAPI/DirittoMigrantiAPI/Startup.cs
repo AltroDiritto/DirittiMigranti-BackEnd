@@ -119,7 +119,6 @@ namespace DirittoMigrantiAPI
 
             context.Add(conv);
 
-            //ricordatevi
             context.SaveChanges();
         }
     }
