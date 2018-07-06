@@ -19,7 +19,7 @@ namespace DirittoMigrantiAPI.API
         }
 
 
-        [Authorize(Roles = "Manager,Administrator")]
+        [Authorize(Roles = "Operator")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         //TODO controllo se è un'operatore
@@ -43,7 +43,7 @@ namespace DirittoMigrantiAPI.API
             return CreatedAtRoute("GetMessageExchange", new { id = messageExchange.Id }, messageExchange);
         }
 
-
+        [Authorize(Roles = "Operator, Consultant")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //NOTA: il Name serve per la chiamata da qua dentro.        
         [HttpGet("getMessageExchange/{id}", Name = "GetMessageExchange")]
@@ -65,36 +65,75 @@ namespace DirittoMigrantiAPI.API
             else return NotFound();
         }
 
+        [Authorize(Roles = "Operator, Consultant")]
+        [HttpGet]
         public IActionResult GetListOrderedByLastUpdate()
         {
-            throw new NotImplementedException();
+            var messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
+            if (messageExchange == null)
+            {
+                return NotFound();
+            }
+            return Ok(messageExchange);
         }
 
+        [Authorize(Roles = "Operator, Consultant")]
+        [HttpGet]
         public IActionResult GetListOrderedByCreationDate()
         {
-            throw new NotImplementedException();
+            var messageExchange = base.GetAllMessageExchangeByCreationDate();
+            if (messageExchange == null)
+            {
+                return NotFound();
+            }
+            return Ok(messageExchange);
         }
 
-        public IActionResult AddMessage(Message message)
+        [Authorize(Roles = "Operator, Consultant")]
+        [HttpPost]
+        public IActionResult AddMessage(long conversationId, [FromBody] Message message)
         {
-            throw new NotImplementedException();
+            var flag = base.AddMessageToConversation(conversationId, message);
+            if (flag == false)
+            {
+                return BadRequest();
+            }
+            return Ok(flag);
         }
 
-        public IActionResult GetNotes(long conversationId)
+        [Authorize(Roles = "Consultant")]
+        [HttpGet]
+        public IActionResult GetNotesAPI(long conversationId)
         {
-            throw new NotImplementedException();
+            String notes = null;
+            notes = base.GetMessageExchange(conversationId).Notes;
+            if (notes == null)
+            {
+                return NotFound();
+            }
+            return Ok(notes);
         }
 
+        [Authorize(Roles = "Consultant")]
+        [HttpPost]
         public IActionResult EditNotes(long conversationId, string text)
         {
-            throw new NotImplementedException();
+            string notes = null;
+            notes = base.EditNotesInConversation(conversationId, text);
+            if (notes == null)
+            {
+                return NotFound();
+            }
+            return Ok(notes);
         }
 
+        [Authorize(Roles = "Consultant")]
         public IActionResult GetStarred()
         {
             throw new NotImplementedException();
         }
 
+        [Authorize(Roles = "Consultant")]
         public IActionResult SetStarred(long conversationId)
         {
             throw new NotImplementedException();
