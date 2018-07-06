@@ -121,5 +121,27 @@ namespace DirittoMigrantiAPI
 
             context.SaveChanges();
         }
+
+        private static void AddNewsTestData(ContentContext context){
+            var news1 = new News((Consultant)users[1], "Titolo news 1", "Lorem ipsum.....");
+            var news2 = new News((Consultant)users[1], "Titolo news 2", "Lorem ipsum....", "http://attachedURL.com/");
+            news2.Publish();
+
+            context.Add(news1); //context.News.Add(news1)????
+            context.Add(news2);
+
+            context.SaveChanges();
+        }
+
+        private static void AddPracticeTestData(ContentContext context){
+            var practice1 = new Practice((Consultant)users[1], "Titolo practica 1", "Lorem ipsum...", true);
+            var practice2 = new Practice((Consultant)users[1], "Titolo practica 2", "Lorem ipsum...", false);
+
+            context.Add(practice1);
+            context.Add(practice2);
+
+            context.SaveChanges();
+
+        }
     }
 }
