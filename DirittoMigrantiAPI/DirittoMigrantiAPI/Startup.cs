@@ -15,6 +15,9 @@ namespace DirittoMigrantiAPI
     public class Startup
     {
         static public List<User> users;
+        static public List<News> news;  //Alternativa: fare una lista unica di Content, così mi pare più ordinato
+        static public List<Practice> practices;   //news e practice avrei potuto dichiararle anche dentro alle funzioni
+        
 
 
         public void ConfigureServices(IServiceCollection services)
@@ -72,12 +75,12 @@ namespace DirittoMigrantiAPI
             AddUserTestData(userContext);
 
             var contentContext = serviceProvider.GetRequiredService<ContentContext>();
-
-
+            AddContentTestData(contentContext);
+            
             var conversationContext = serviceProvider.GetRequiredService<MessageExchangesContext>();
-
-            AddConversationTestData(conversationContext, userContext);
+            AddConversationTestData(conversationContext);
             #endregion
+
 
 
             app.UseMvc();
@@ -102,6 +105,7 @@ namespace DirittoMigrantiAPI
                 Password = "utente2",
             };
             context.Users.Add(consultant);
+            
 
             context.SaveChanges();
 
@@ -109,39 +113,44 @@ namespace DirittoMigrantiAPI
             users.Add(consultant);
         }
 
-        private static void AddConversationTestData(MessageExchangesContext context, UserContext userContext)
-        {
+        private static void AddConversationTestData(MessageExchangesContext context)
+        {           
             Message firstMessage = new Message(users[0], "Testo di prova 1 messaggio");
             MessageExchange conv = new MessageExchange(firstMessage);
-
+                        
             Message secondMessage = new Message(users[1], "Testo secondo");
+           
             conv.AddMessage(secondMessage);
 
-            context.Add(conv);
+            context.MessageExchanges.Add(conv);
 
             context.SaveChanges();
         }
 
-        private static void AddNewsTestData(ContentContext context){
-            var news1 = new News((Consultant)users[1], "Titolo news 1", "Lorem ipsum.....");
-            var news2 = new News((Consultant)users[1], "Titolo news 2", "Lorem ipsum....", "http://attachedURL.com/");
-            news2.Publish();
+        //Questo vale sia per le news che per le pratiche @Gianluca (Entrambe sono content)
+        private static void AddContentTestData(ContentContext context)
+        {
+            news = new List<News>();
+            practices = new List<Practice>();
 
-            context.Add(news1); //context.News.Add(news1)????
-            context.Add(news2);
+            News news1 = new News((Consultant)users[1], "Titolo news 1", "Lorem ipsum.....");
+            news.Add(news1);
+            News news2 = new News((Consultant)users[1], "Titolo news 2", "Lorem ipsum....", "http://attachedURL.com/");
+            news.Add(news2);
+            news2.Publish();   //Perchè questo? @Gianluca
+            
+            context.Add(news);
 
-            context.SaveChanges();
-        }
+            context.SaveChanges(); //@Leo non so se basti chiamarlo una volta in fondo            
 
-        private static void AddPracticeTestData(ContentContext context){
-            var practice1 = new Practice((Consultant)users[1], "Titolo practica 1", "Lorem ipsum...", true);
-            var practice2 = new Practice((Consultant)users[1], "Titolo practica 2", "Lorem ipsum...", false);
+            Practice practice1 = new Practice((Consultant)users[1], "Titolo practica 1", "Lorem ipsum...", true);
+            practices.Add(practice1);
+            Practice practice2 = new Practice((Consultant)users[1], "Titolo practica 2", "Lorem ipsum...", false);
+            practices.Add(practice2);
 
-            context.Add(practice1);
-            context.Add(practice2);
+            context.Add(practices);         
 
-            context.SaveChanges();
-
+            context.SaveChanges();   //Forse basta chiamare questo
         }
     }
 }
