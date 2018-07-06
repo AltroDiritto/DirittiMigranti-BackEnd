@@ -19,5 +19,13 @@ namespace DirittoMigrantiAPI.Models
         {
             this.isPrivate = newPrivacy;
         }
+
+        public bool IsPrivate()
+        {
+            return isPrivate;
+        }
+
+
+
     }
 }

@@ -7,6 +7,6 @@ namespace DirittoMigrantiAPI.Controllers
         News GetNews(long id);
         bool DeleteNews(long contentId);
         News NewNews(News news);
-        bool SetState(long contendId, bool isPublished);
+        bool SetNewsState(long contendId, bool isPublished);
     }
 }

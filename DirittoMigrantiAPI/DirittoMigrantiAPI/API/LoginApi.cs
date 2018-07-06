@@ -19,9 +19,6 @@ namespace DirittoMigrantiAPI.API
             _context = context;
         }
 
-
-
-
         // POST api/login
         [HttpPost]
         public IActionResult TryToLogin([FromBody] TokenRequest tokenRequest)

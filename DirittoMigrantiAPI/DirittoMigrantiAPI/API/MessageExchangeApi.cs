@@ -11,11 +11,11 @@ namespace DirittoMigrantiAPI.API
     [Route("api/[controller]")]
     public class MessageExchangeApi : MessageExchangesController
     {
-        private readonly MessageExchangesContext context;
+        private readonly MessageExchangesContext _context;
 
         public MessageExchangeApi(MessageExchangesContext context) : base(context.MessageExchanges)
         {
-            this.context = context;
+            this._context = context;
         }
 
 
@@ -23,6 +23,7 @@ namespace DirittoMigrantiAPI.API
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         //TODO controllo se è un'operatore
+        //Se è un operatore non dovrebbe essere già gestito da Authorize
         public IActionResult Create([FromBody] Message message)
         {
             if (!ModelState.IsValid)
@@ -36,7 +37,7 @@ namespace DirittoMigrantiAPI.API
                 return BadRequest();
 
             // Salvo
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Invio come risposta le info dell'utente appena creato
             return CreatedAtRoute("GetMessageExchange", new { id = messageExchange.Id }, messageExchange);

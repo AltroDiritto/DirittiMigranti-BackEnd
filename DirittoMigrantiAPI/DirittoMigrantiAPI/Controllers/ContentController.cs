@@ -30,56 +30,75 @@ namespace DirittoMigrantiAPI.Controllers
 
         private bool DeleteContent(long contentId)
         {
-            throw new NotImplementedException();
+            var content = contents.Find(contentId);
+            contents.Remove(content);
+            var check = contents.Find(contentId);
+            return check != null;
+            
         }
                    
         #region NEWS 
         public News GetNews(long id)
         {
-            throw new NotImplementedException();
+            News news = (News)GetContent(id);
+            if (!news.IsPublished)
+                return null;
+            return news;
         }
 
         public News NewNews(News news)
         {
-            throw new NotImplementedException();
+            return (News)NewContent(news);
         }
 
-        public bool SetState(long contentId, bool isPublished)
+        public bool SetNewsState(long contentId, bool isPublished)
         {
-            throw new NotImplementedException();
+            News news = GetNews(contentId);
+            if(isPublished) 
+                news.Publish();
+            else news.Hide();
+            return news.IsPublished;
         }
 
         public bool DeleteNews(long contentId)
         {
-            var content = contents.Find(contentId);
-            contents.Remove(content);
-            var check = contents.Find(contentId);
-            return check != null;
+            return DeleteContent(contentId);
         }
         #endregion
         
         #region PRACTICE        
-        public Practice GetPractice(long contentId)
+        public Practice GetPublicPractice(long contentId)
         {
-            throw new NotImplementedException();
+            Practice practice = (Practice)GetContent(contentId);
+            if (practice.IsPrivate())
+                return null;
+            return practice;
         }
+
+        public Practice GetPrivatePractice(long contentId)
+        {
+            Practice practice = (Practice)GetContent(contentId);
+            if (!practice.IsPrivate())
+                return null;
+            return practice;
+        }
+
 
         public Practice NewPractice(Practice practice)
         {
-            throw new NotImplementedException();
+            return (Practice)NewContent(practice);
         }
 
         public bool SetPracticePrivacy(long contentId, bool newState)
         {
-            throw new NotImplementedException();
+            Practice practice = (Practice)GetContent(contentId);
+            practice.ChangePrivacy(newState);
+            return newState;
         }
 
         public bool DeletePractice(long contentId)
         {
-            var content = contents.Find(contentId);
-            contents.Remove(content);
-            var check = contents.Find(contentId);
-            return check != null;
+            return DeleteContent(contentId);
         }        
         #endregion
 
@@ -88,15 +107,5 @@ namespace DirittoMigrantiAPI.Controllers
         {
             throw new NotImplementedException();
         }
-
-
-
-
-
-
-
-
-
-
     }
 }

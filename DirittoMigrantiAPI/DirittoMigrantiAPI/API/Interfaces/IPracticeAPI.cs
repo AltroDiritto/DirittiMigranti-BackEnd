@@ -9,7 +9,8 @@ namespace DirittoMigrantiAPI.API
 {
     public interface IPracticeAPI
     {
-        IActionResult GetPracticeAPI(long contentId);
+        IActionResult GetPublicPracticeAPI(long contentId);
+        IActionResult GetPrivatePracticeAPI(long contentId);
         IActionResult CreatePracticeAPI(Practice practice);
         IActionResult DeletePracticeAPI(long contentId);
         IActionResult SetPracticePrivacyAPI(long practiceId, bool newState);
