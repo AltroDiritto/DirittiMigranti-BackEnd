@@ -58,7 +58,7 @@ namespace DirittoMigrantiAPI.API
 
         #region Operator
         //[AllowAnonymous]
-        [HttpPost]
+        [HttpPost("newOp", Name = "NewOperator")]
         public IActionResult NewOperatorAPI([FromBody] Operator op)
         {
             if (!ModelState.IsValid)
@@ -77,6 +77,8 @@ namespace DirittoMigrantiAPI.API
             return Ok(checkOperator);
         }
 
+        [Authorize(Roles = "Consultant")]
+        [HttpGet("getOp/{userId}", Name = "GetOperator")]
         public IActionResult GetOperatorAPI(long userId)
         {
             //string sn = (User as ClaimsPrincipal)?.FindFirst(ClaimTypes.SerialNumber)?.Value;
@@ -86,6 +88,8 @@ namespace DirittoMigrantiAPI.API
             return Ok(op);
         }
 
+        [Authorize(Roles = "Consultant")]
+        [HttpGet("getAllOp", Name = "getAllOperator")]
         public IActionResult GetAllOperatorsAPI()
         {
             var allOperators = GetAllOperator();
@@ -94,6 +98,8 @@ namespace DirittoMigrantiAPI.API
             return Ok(allOperators);
         }
 
+        [Authorize(Roles = "Consultant")]
+        [HttpPost("setOpState", Name = "SetOperatorState")]
         public IActionResult SetOperatorStateAPI(long userId, bool newState)
         {
             return Ok(ChangeState(userId, newState));
@@ -101,6 +107,7 @@ namespace DirittoMigrantiAPI.API
         #endregion
 
         #region Consultant
+        [HttpGet("getCons", Name = "getConsultant")]
         public IActionResult GetConsultantAPI(long userId)
         {
             var consultant = GetConsultant(userId);

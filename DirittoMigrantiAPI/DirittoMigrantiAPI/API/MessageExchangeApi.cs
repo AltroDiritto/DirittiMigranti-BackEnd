@@ -102,7 +102,7 @@ namespace DirittoMigrantiAPI.API
         }
 
         [Authorize(Roles = "Consultant")]
-        [HttpGet("getN{conversationId}", Name = "getNotes")]
+        [HttpGet("getN/{conversationId}", Name = "getNotes")]
         public IActionResult GetNotesAPI(long conversationId)
         {
             String notes = null;
