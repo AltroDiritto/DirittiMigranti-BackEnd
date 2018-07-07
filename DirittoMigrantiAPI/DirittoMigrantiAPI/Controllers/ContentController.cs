@@ -1,4 +1,5 @@
 ﻿using System;//nuova news
+using System.Linq;
 using DirittoMigrantiAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,13 +35,15 @@ namespace DirittoMigrantiAPI.Controllers
             contents.Remove(content);
             var check = contents.Find(contentId);
             return check != null;
-            
+
         }
-                   
+
         #region NEWS 
         public News GetNews(long id)
         {
             News news = (News)GetContent(id);
+            if (news == null) return null;
+
             if (!news.IsPublished)
                 return null;
             return news;
@@ -54,7 +57,7 @@ namespace DirittoMigrantiAPI.Controllers
         public bool SetNewsState(long contentId, bool isPublished)
         {
             News news = GetNews(contentId);
-            if(isPublished) 
+            if (isPublished)
                 news.Publish();
             else news.Hide();
             return news.IsPublished;
@@ -65,15 +68,19 @@ namespace DirittoMigrantiAPI.Controllers
             return DeleteContent(contentId);
         }
         #endregion
-        
+
         #region PRACTICE        
         public Practice GetPublicPractice(long contentId)
         {
-            Practice practice = (Practice)GetContent(contentId);
+            var content = GetContent(contentId);
+            if (!(content is Practice)) return null;//TODO farlo ovunque
+
+            Practice practice = (Practice)content;
             if (practice.IsThisPrivate())
                 return null;
             return practice;
         }
+
 
         public Practice GetPrivatePractice(long contentId)
         {
@@ -99,7 +106,7 @@ namespace DirittoMigrantiAPI.Controllers
         public bool DeletePractice(long contentId)
         {
             return DeleteContent(contentId);
-        }        
+        }
         #endregion
 
         //LOG

@@ -6,6 +6,9 @@ namespace DirittoMigrantiAPI.Models
 {
     public class Message
     {
+        // Id used as a key in the dictionary where all the users are stored
+        public long Id { get; set; }
+
         [Required]
         public User Author { get; set; }
         [Required]
@@ -16,6 +19,8 @@ namespace DirittoMigrantiAPI.Models
         public string MessageContent { get; set; }
         [Url]
         public string AttachmentURL { get; set; }
+
+        public MessageExchange WhereIBelong { get; set; }
 
         public Message(User author, string messageContent)
         {

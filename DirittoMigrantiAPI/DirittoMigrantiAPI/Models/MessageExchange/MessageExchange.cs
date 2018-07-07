@@ -9,20 +9,23 @@ namespace DirittoMigrantiAPI.Models
         // Id used as a key in the dictionary where all the users are stored
         public long Id { get; set; }
 
-        public readonly DateTime creationDate;
-        readonly public Operator conversationOwner;
+        public DateTime creationDate { get; set; }
+        public Operator conversationOwner { get; set; }
         public string Notes { get; private set; }
-    
-        private List<Message> messages = new List<Message>();
 
+        public ICollection<Message> Messages { get ; set; }
+
+        public MessageExchange() { Messages = new List<Message>(); }
 
         public MessageExchange(Message message)
         {
+            Messages = new List<Message>();//TODO vedere come farlo meglio
+
             if (!(message.Author is Operator)) throw new ArgumentException("");
 
             //se il messaggio è di un consulente, crasha il cast
             conversationOwner = (Operator)message.Author;
-            messages.Add(message);
+            Messages.Add(message);
             creationDate = DateTime.Now;
         }
 
@@ -30,7 +33,7 @@ namespace DirittoMigrantiAPI.Models
         {
             if (message.Author == conversationOwner || message.Author is Consultant)
             {
-                messages.Add(message);
+                Messages.Add(message);
                 return true;
             }
             return false;
@@ -45,15 +48,15 @@ namespace DirittoMigrantiAPI.Models
 
         public DateTime? GetLastUpdate()
         {
-            if (messages != null)
-                if (messages.Count > 0)
-                    return messages[messages.Count - 1].CreationDate;
+            if (Messages != null)
+                if (Messages.Count > 0)
+                    return Messages.Last().CreationDate;
             return null;
         }
 
         public bool IsThisUserInTheConversation(User user)
         {
-            return messages.Any((message) => message.Author == user);
+            return Messages.Any((message) => message.Author == user);
         }
 
         public bool IsThisUserTheOwner(User user)

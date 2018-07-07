@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace DirittoMigrantiAPI.Models
 
@@ -21,5 +22,6 @@ namespace DirittoMigrantiAPI.Models
         [StringLength(30, MinimumLength = 2)]
         public string Surname { get; set; }
         
+        public ICollection<Message> Messages { get; set; }
     }
 }

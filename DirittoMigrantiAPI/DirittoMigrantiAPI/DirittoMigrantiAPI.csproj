@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>3004ab9b-a167-4192-a881-3b24ea542eee</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +37,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Models\MessageExchange.cs" />
-    <None Remove="diritto-migranti-content.db" />
   </ItemGroup>
 </Project>

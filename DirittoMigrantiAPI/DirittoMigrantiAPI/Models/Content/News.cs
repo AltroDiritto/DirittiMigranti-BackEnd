@@ -5,7 +5,6 @@ namespace DirittoMigrantiAPI.Models
 {
     public class News : Content
     {
-        [Required]
         public bool IsPublished { get; private set; }
 
         public News() { }

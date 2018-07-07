@@ -59,7 +59,7 @@ namespace DirittoMigrantiAPI.API
         #region Operator
         //[AllowAnonymous]
         [HttpPost("newOp", Name = "NewOperator")]
-        public IActionResult NewOperatorAPI([FromBody] Operator op)
+        public IActionResult NewOperatorAPI([FromBody] UserAuth auth,[FromBody] Operator op)
         {
             if (!ModelState.IsValid)
             {

@@ -152,9 +152,9 @@ namespace DirittoMigrantiAPI
             Message firstMessage = new Message(users[0], "Testo di prova 1 messaggio");
             MessageExchange conv = new MessageExchange(firstMessage);
 
-            Message secondMessage = new Message(users[1], "Testo secondo");
+            //Message secondMessage = new Message(users[1], "Testo secondo");
 
-            conv.AddMessage(secondMessage);
+            //conv.AddMessage(secondMessage);
 
             context.MessageExchanges.Add(conv);
 

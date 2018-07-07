@@ -8,18 +8,23 @@ namespace DirittoMigrantiAPI.Models
         // Id used as a key in the dictionary where all the users are stored
         [Key]
         public long Id { get; set; }
+
         [Required]
         public Consultant Writer { get; set; }
+
         [Required]
         public DateTime CreationDate { get; set; }
-        [Required]        
+
+        [Required]
         [StringLength(100, MinimumLength = 2)]
         public string Title { get; set; }
+
         [Required]
-        [StringLength(5000,MinimumLength = 0)]
-        string Text { get; set; }
+        [StringLength(5000, MinimumLength = 1)]
+        public string Text { get; set; }
+
         [Url]
-        string AttachedURL { get; set; }
+        public string AttachedURL { get; set; }
 
         DateTime lastTextUpdate;
 

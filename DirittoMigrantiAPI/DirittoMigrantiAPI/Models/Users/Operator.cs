@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace DirittoMigrantiAPI.Models
 {
@@ -18,6 +19,8 @@ namespace DirittoMigrantiAPI.Models
         //[Required]
         
         public string Location { get; set; }
+        
+        public ICollection<MessageExchange> MessageExchanges { get; set; }
 
         public Operator() : base() { }
 
