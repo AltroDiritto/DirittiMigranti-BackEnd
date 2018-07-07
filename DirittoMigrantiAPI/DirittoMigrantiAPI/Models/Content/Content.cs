@@ -6,15 +6,20 @@ namespace DirittoMigrantiAPI.Models
     public class Content
     {
         // Id used as a key in the dictionary where all the users are stored
+        [Key]
         public long Id { get; set; }
-
-        public readonly User writer;
-        public readonly DateTime creationDate;
-                
+        [Required]
+        public User Writer { get; set; }
+        [Required]
+        public DateTime CreationDate { get; set; }
+        [Required]        
         [StringLength(100, MinimumLength = 2)]
         public string Title { get; set; }
-        string text;
-        string attachmentUrl;
+        [Required]
+        [StringLength(5000,MinimumLength = 0)]
+        string Text { get; set; }
+        [Url]
+        string AttachedURL { get; set; }
 
         DateTime lastTextUpdate;
 
@@ -22,20 +27,20 @@ namespace DirittoMigrantiAPI.Models
 
         public Content(User writer, string title, string text, string attachmentUrl)
         {
-            this.writer = writer;
+            this.Writer = writer;
             this.Title = title;
 
             UpdateText(text);
-            this.attachmentUrl = attachmentUrl;
-            creationDate = DateTime.Now;
+            this.AttachedURL = attachmentUrl;
+            CreationDate = DateTime.Now;
         }
 
         private string UpdateText(string text)
         {
             //TODO controllo autore
-            this.text = text;
+            this.Text = text;
             lastTextUpdate = DateTime.Now;
-            return this.text;
+            return this.Text;
         }
     }
 }
