@@ -127,16 +127,27 @@ namespace DirittoMigrantiAPI.API
             return Ok(notes);
         }
 
-        [Authorize(Roles = "Consultant")]
-        public IActionResult GetStarred()
-        {
-            throw new NotImplementedException();
-        }
+        //[Authorize(Roles = "Consultant")]
+        //[HttpGet]
+        //public IActionResult GetStarred()
+        //{
+        //    //TODO cambiare il contesto da cui viene preso l'elenco conversazioni una volta che verrà inserito nel costruttore
+        //    var starredConversation = base.GetstarredConversations();
+        //    if (starredConversation == null)
+        //        return NotFound();
+        //    return Ok(starredConversation);
+        //}
 
-        [Authorize(Roles = "Consultant")]
-        public IActionResult SetStarred(long conversationId)
-        {
-            throw new NotImplementedException();
-        }
+        //[Authorize(Roles = "Consultant")]
+        //[HttpPost]
+        //public IActionResult SetStarred(long conversationId)
+        //{
+        //    //  TODO cambiare contesto da cui viene preso il metodo StarConversation
+        //    //cosa ritorna???? 
+        //    if (userContext.StarConversation(base.GetMessageExchange(conversationId)))
+        //        return Ok(true);
+        //    return NotFound();
+        //    throw new NotImplementedException();
+        //}
     }
 }
