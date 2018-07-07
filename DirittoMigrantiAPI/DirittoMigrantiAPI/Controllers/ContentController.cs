@@ -70,7 +70,7 @@ namespace DirittoMigrantiAPI.Controllers
         public Practice GetPublicPractice(long contentId)
         {
             Practice practice = (Practice)GetContent(contentId);
-            if (practice.IsPrivate())
+            if (practice.IsThisPrivate())
                 return null;
             return practice;
         }
@@ -78,7 +78,7 @@ namespace DirittoMigrantiAPI.Controllers
         public Practice GetPrivatePractice(long contentId)
         {
             Practice practice = (Practice)GetContent(contentId);
-            if (!practice.IsPrivate())
+            if (!practice.IsThisPrivate())
                 return null;
             return practice;
         }
