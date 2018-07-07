@@ -14,21 +14,19 @@ namespace DirittoMigrantiAPI.API
     public class UserControllerAPI : UserController, IConsultantAPI, IOperatorAPI
     {
         private readonly UserContext _context;
-        public UserControllerAPI(UserContext context) : base(context.Users,context.UsersAuth)
+        public UserControllerAPI(UserContext context) : base(context.Users, context.UsersAuth)
         {
             this._context = context;
         }
 
-        // POST api/login
-        [Route("api/login")]
-        [HttpPost]
+        [HttpPost("login", Name = "Login")]
         public IActionResult TryToLogin([FromBody] UserAuth userAuth)
         {
             //TokenRequest è una nostra classe contenente le proprietà Username e Password
             //Avvisiamo il client se non ha fornito tali valori
             if (!ModelState.IsValid)
             {
-                View(userAuth);
+                //View(userAuth);
                 return BadRequest();
             }
 
@@ -36,16 +34,15 @@ namespace DirittoMigrantiAPI.API
             if (!CheckCredentials(userAuth))
                 return Unauthorized();
 
-
             //Ok, l'utente ha fornito credenziali valide, creiamogli una ClaimsIdentity
             var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
 
-            //Aggiungiamo uno o più claim relativi all'utente loggato
             long userId = GetUserId(userAuth);
-            User user = GetUser(userId);
+           // User user = GetUser(userId);
 
-            identity.AddClaim(new Claim(ClaimTypes.Role, user is Operator ? "Operator" : "Consultant"));
-            identity.AddClaim(new Claim(ClaimTypes.SerialNumber, userId.ToString()));
+            //Aggiungiamo uno o più claim relativi all'utente loggato
+            //  identity.AddClaim(new Claim(ClaimTypes.Role, user is Operator ? "Operator" : "Consultant"));
+             identity.AddClaim(new Claim(ClaimTypes.SerialNumber, userId.ToString()));
 
             //Incapsuliamo l'identità in una ClaimsPrincipal l'associamo alla richiesta corrente
             HttpContext.User = new ClaimsPrincipal(identity);
@@ -54,7 +51,7 @@ namespace DirittoMigrantiAPI.API
             return NoContent();
         }
 
-       
+
         #region Operator
         //[AllowAnonymous]
         [HttpPost]
@@ -109,6 +106,5 @@ namespace DirittoMigrantiAPI.API
         }
         #endregion
         //Non è necessario creare il token qui, lo possiamo creare da un middleware (perchè?)
-
     }
 }

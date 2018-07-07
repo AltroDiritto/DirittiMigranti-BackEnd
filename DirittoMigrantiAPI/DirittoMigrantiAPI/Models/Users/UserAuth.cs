@@ -11,13 +11,21 @@ namespace DirittoMigrantiAPI.Models.Users
         [Required]
         [Key]
         [StringLength(30, MinimumLength = 5)]
-        public string Username { private get; set; }
+        public string Username {  get; set; }
 
         [StringLength(40, MinimumLength = 8)]
         [Required]
-        public string Password { private get; set; }
+        public string Password {  get; set; }
 
         public long UserId { get; set; }
+
+
+        public UserAuth(){}
+        public UserAuth(string username,string password,long userId){
+            Username = username;
+            Password = password;
+            UserId = UserId;
+        }
 
         public bool CheckCredentials(UserAuth userAuth)
         {

@@ -36,5 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Models\MessageExchange.cs" />
+    <None Remove="diritto-migranti-content.db" />
   </ItemGroup>
 </Project>

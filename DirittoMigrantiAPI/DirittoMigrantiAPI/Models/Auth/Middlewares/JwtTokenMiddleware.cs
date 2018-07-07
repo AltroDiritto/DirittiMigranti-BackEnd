@@ -50,8 +50,8 @@ namespace DirittoMigrantiAPI.Models
               claims: identity.Claims,
               expires: DateTime.Now.AddMinutes(30), //Dura 30 min
                 signingCredentials: credentials
-
             );
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var serializedToken = tokenHandler.WriteToken(token);
             return serializedToken;
