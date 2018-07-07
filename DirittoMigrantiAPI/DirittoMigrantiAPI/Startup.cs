@@ -107,6 +107,7 @@ namespace DirittoMigrantiAPI
             //creo utente
             var operator1 = new Operator
             {
+                Id = IdGenerator(context),
                 Email = "utente18@example.com",
                 IsActive = true
             };
@@ -119,18 +120,31 @@ namespace DirittoMigrantiAPI
             //creo utente
             Consultant consultant = new Consultant
             {
+                Id = IdGenerator(context),
                 Email = "utente882@example.com"
             };
             s = context.Users.Add(consultant);
 
             //creo credenziali
-            var auth2 = new UserAuth("consultant","consultant", s.Entity.Id);
+            var auth2 = new UserAuth("consultant", "consultant", s.Entity.Id);
             context.UsersAuth.Add(auth2);
 
             context.SaveChanges();
 
             users.Add(operator1);
             users.Add(consultant);
+        }
+
+        private static long IdGenerator(UserContext context)
+        {
+            Random rnd = new Random();
+            long num;
+            do
+            {
+                num = (long)rnd.Next(0, 43 * 9900000);
+            } while (context.Users.Find(num) != null);
+
+            return num;
         }
 
         private static void AddConversationTestData(MessageExchangesContext context)
