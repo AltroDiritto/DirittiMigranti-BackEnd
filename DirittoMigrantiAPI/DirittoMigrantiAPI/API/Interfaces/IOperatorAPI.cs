@@ -5,9 +5,9 @@ namespace DirittoMigrantiAPI.API
 {
     internal interface IOperatorAPI
     {
-        IActionResult NewOperator(Operator @operator);
-        IActionResult GetOperator(long userId);
-        IActionResult GetAllOperators();
-        IActionResult SetOperatorState(long userId, bool newState);
+        IActionResult NewOperatorAPI(Operator @operator);
+        IActionResult GetOperatorAPI(long userId);
+        IActionResult GetAllOperatorsAPI();
+        IActionResult SetOperatorStateAPI(long userId, bool newState);
     }
 }

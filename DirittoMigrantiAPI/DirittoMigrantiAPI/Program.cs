@@ -12,6 +12,7 @@ namespace DirittoMigrantiAPI
 {
     public class Program
     {
+        //TODO spostare su file esterno
         public static string key = "DirittoMigranti2018%";
 
         public static void Main(string[] args)

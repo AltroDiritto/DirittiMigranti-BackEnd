@@ -5,6 +5,6 @@ namespace DirittoMigrantiAPI.API
 {
     internal interface IConsultantAPI
     {
-        IActionResult GetConsultant(long userId);
+        IActionResult GetConsultantAPI(long userId);
     }
 }

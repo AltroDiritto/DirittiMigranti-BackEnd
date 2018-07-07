@@ -75,7 +75,7 @@ namespace DirittoMigrantiAPI
             #region DEBUG
             var userContext = serviceProvider.GetRequiredService<UserContext>();
             userContext.Database.EnsureCreated();
-            AddUserTestData(userContext);
+            //AddUserTestData(userContext);
 
             var contentContext = serviceProvider.GetRequiredService<ContentContext>();
             contentContext.Database.EnsureCreated();

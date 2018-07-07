@@ -13,10 +13,10 @@ namespace DirittoMigrantiAPI.API
     [Route("api/user")]
     public class UserControllerAPI : UserController, IConsultantAPI, IOperatorAPI
     {
-        private readonly UserContext context;
+        private readonly UserContext _context;
         public UserControllerAPI(UserContext context) : base(context.Users,context.UsersAuth)
         {
-            this.context = context;
+            this._context = context;
         }
 
         // POST api/login
@@ -42,7 +42,7 @@ namespace DirittoMigrantiAPI.API
 
             //Aggiungiamo uno o più claim relativi all'utente loggato
             long userId = GetUserId(userAuth);
-            User user = context.Users.Find(userId);
+            User user = GetUser(userId);
 
             identity.AddClaim(new Claim(ClaimTypes.Role, user is Operator ? "Operator" : "Consultant"));
             identity.AddClaim(new Claim(ClaimTypes.SerialNumber, userId.ToString()));
@@ -54,60 +54,60 @@ namespace DirittoMigrantiAPI.API
             return NoContent();
         }
 
-        
-        private IActionResult GetUser(long userId)
-        {
-            //TODO
-            return null;
-        }
-
+       
         #region Operator
         //[AllowAnonymous]
         [HttpPost]
-        public IActionResult NewOperator([FromBody] Operator @operator)
+        public IActionResult NewOperatorAPI([FromBody] Operator op)
         {
             if (!ModelState.IsValid)
             {
-                View(@operator);
+                View(op);
                 return BadRequest();
             }
 
-            return Ok();
+            Operator checkOperator = NewOperator(op);
+
+            if (checkOperator == null)
+                return BadRequest();
+
+            _context.SaveChanges();
+
+            return Ok(checkOperator);
         }
 
-        IActionResult IOperatorAPI.GetOperator(long userId)
+        public IActionResult GetOperatorAPI(long userId)
         {
             //string sn = (User as ClaimsPrincipal)?.FindFirst(ClaimTypes.SerialNumber)?.Value;
-
-            //TODO
-            throw new NotImplementedException();
+            var op = GetOperator(userId);
+            if (op == null)
+                return NotFound();
+            return Ok(op);
         }
 
-        public IActionResult GetAllOperators()
+        public IActionResult GetAllOperatorsAPI()
         {
-            //TODO
-            throw new NotImplementedException();
+            var allOperators = GetAllOperator();
+            if (allOperators == null)
+                return NotFound();
+            return Ok(allOperators);
         }
 
-        public IActionResult SetOperatorState(long userId, bool newState)
+        public IActionResult SetOperatorStateAPI(long userId, bool newState)
         {
-            //TODO
-            throw new NotImplementedException();
+            return Ok(ChangeState(userId, newState));
         }
         #endregion
 
         #region Consultant
-        IActionResult IConsultantAPI.GetConsultant(long userId)
+        public IActionResult GetConsultantAPI(long userId)
         {
-            //TODO
-            throw new NotImplementedException();
+            var consultant = GetConsultant(userId);
+            if (consultant == null)
+                return NotFound();
+            return Ok(consultant);
         }
         #endregion
-
-
-       
-
-
         //Non è necessario creare il token qui, lo possiamo creare da un middleware (perchè?)
 
     }

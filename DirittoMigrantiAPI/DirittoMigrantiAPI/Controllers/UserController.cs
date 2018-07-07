@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DirittoMigrantiAPI.Models;
 using DirittoMigrantiAPI.Models.Users;
@@ -27,7 +28,7 @@ namespace DirittoMigrantiAPI.Controllers
             return usersAuth.Where((u) => u.CheckCredentials(userAuth)).ToList()[0].UserId;
         }
 
-        private User GetUser(long id)
+        protected User GetUser(long id)
         {
             return users.Find(id);
         }
@@ -46,12 +47,12 @@ namespace DirittoMigrantiAPI.Controllers
             return (Operator)GetUser(id);
         }
 
-        public Operator NewOperator(Operator @operator)
+        public Operator NewOperator(Operator op)
         {
-            if (users.Contains(@operator)) return null;
+            if (users.Contains(op)) return null;
 
-            users.Add(@operator);
-            return @operator;
+            users.Add(op);
+            return op;
         }
 
         public bool ChangeState(long operatorId, bool newState)
@@ -60,11 +61,11 @@ namespace DirittoMigrantiAPI.Controllers
             return _operator.ChangeState(newState);
         }
 
-        public DbSet<User> GetAllOperator()
+        public List<Operator> GetAllOperator()
         {
-            //TODO
-            return null;
+            return users.Where((user) => user is Operator).OfType<Operator>().ToList();
         }
         #endregion
     }
+
 }
