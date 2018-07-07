@@ -16,7 +16,7 @@ namespace DirittoMigrantiAPI
 {
     public class Startup
     {
-        static List<User> users;
+        static private List<User> users;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -27,7 +27,7 @@ namespace DirittoMigrantiAPI
 
             //List of Consultant and Operators
             services.AddDbContext<UserContext>(options =>
-                                               options.UseSqlite("Data Source=diritto-migranti-user.db"));
+                                               options.UseSqlite(@"Data Source=diritto-migranti-user.db"));
 
             //List of Conversations with Messages
             services.AddDbContext<MessageExchangesContext>(options =>
@@ -72,21 +72,23 @@ namespace DirittoMigrantiAPI
             app.UseMiddleware<JwtTokenMiddleware>();
             app.UseAuthentication();
 
-            #region DEBUG
+            #region Context init
             var userContext = serviceProvider.GetRequiredService<UserContext>();
-            userContext.Database.EnsureCreated();
-            //AddUserTestData(userContext);
+            if (userContext.Database.EnsureCreated())
+                AddUserTestData(userContext);
 
             var contentContext = serviceProvider.GetRequiredService<ContentContext>();
-            contentContext.Database.EnsureCreated();
-            // AddContentTestData(contentContext);
+            if (contentContext.Database.EnsureCreated())
+                AddContentTestData(contentContext);
 
             var conversationContext = serviceProvider.GetRequiredService<MessageExchangesContext>();
-            conversationContext.Database.EnsureCreated();
-            // AddConversationTestData(conversationContext);
+            if (conversationContext.Database.EnsureCreated())
+                AddConversationTestData(conversationContext);
+            #endregion
 
-            var users = userContext.Users.ToList();
-            var contents = contentContext.Contents.ToList();
+            #region DEBUG
+            //var users = userContext.Users.ToList();
+            //var contents = contentContext.Contents.ToList();
             #endregion
 
             if (env.IsDevelopment())
@@ -111,25 +113,18 @@ namespace DirittoMigrantiAPI
             var s = context.Users.Add(operator1);
 
             //creo credenziali
-            var auth1 = new UserAuth();
-            auth1.Username = "a";
-            auth1.Password = "a";
-            auth1.UserId = s.Entity.Id;
+            var auth1 = new UserAuth("operatore", "operatore", s.Entity.Id);
             context.UsersAuth.Add(auth1);
-
 
             //creo utente
             Consultant consultant = new Consultant
             {
                 Email = "utente882@example.com"
             };
-            s=context.Users.Add(consultant);
+            s = context.Users.Add(consultant);
 
             //creo credenziali
-            var auth2 = new UserAuth();
-            auth2.Username = "b";
-            auth2.Password = "b";
-            auth2.UserId = s.Entity.Id;
+            var auth2 = new UserAuth("consultant","consultant", s.Entity.Id);
             context.UsersAuth.Add(auth2);
 
             context.SaveChanges();
