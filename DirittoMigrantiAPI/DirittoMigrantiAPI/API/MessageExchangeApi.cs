@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.API
 {
-    [Route("api/[controller]")]
+    [Route("api/conv")]
     public class MessageExchangeApi : MessageExchangesController
     {
         private readonly MessageExchangesContext _context;
@@ -21,7 +21,7 @@ namespace DirittoMigrantiAPI.API
 
         [Authorize(Roles = "Operator")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPost]
+        [HttpPost("newC", Name = "NewConversation")]
         //TODO controllo se è un'operatore
         //Se è un operatore non dovrebbe essere già gestito da Authorize
         public IActionResult Create([FromBody] Message message)
@@ -40,13 +40,13 @@ namespace DirittoMigrantiAPI.API
             _context.SaveChanges();//TODO controlla eccezioni
 
             // Invio come risposta le info dell'utente appena creato
-            return CreatedAtRoute("GetMessageExchange", new { id = messageExchange.Id }, messageExchange);
+            return CreatedAtRoute("GetME", new { id = messageExchange.Id }, messageExchange);
         }
 
         [Authorize(Roles = "Operator, Consultant")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //NOTA: il Name serve per la chiamata da qua dentro.        
-        [HttpGet("getMessageExchange/{id}", Name = "GetMessageExchange")]
+        [HttpGet("getME/{id}", Name = "GetMessageExchange")]
         public IActionResult GetById(long id)
         {
             //TODO ottenere lo user 
@@ -66,7 +66,7 @@ namespace DirittoMigrantiAPI.API
         }
 
         [Authorize(Roles = "Operator, Consultant")]
-        [HttpGet]
+        [HttpGet("getMELastU", Name = "GetAllMessageExchangesOrderByLastUpdate")]
         public IActionResult GetListOrderedByLastUpdate()
         {
             var messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
@@ -78,7 +78,7 @@ namespace DirittoMigrantiAPI.API
         }
 
         [Authorize(Roles = "Operator, Consultant")]
-        [HttpGet]
+        [HttpGet("getMECr", Name = "GetAllMessageExchangeByCreationDate")]
         public IActionResult GetListOrderedByCreationDate()
         {
             var messageExchange = base.GetAllMessageExchangeByCreationDate();
@@ -90,7 +90,7 @@ namespace DirittoMigrantiAPI.API
         }
 
         [Authorize(Roles = "Operator, Consultant")]
-        [HttpPost]
+        [HttpPost("addM", Name = "addMessage")]
         public IActionResult AddMessage(long conversationId, [FromBody] Message message)
         {
             var flag = base.AddMessageToConversation(conversationId, message);
@@ -102,7 +102,7 @@ namespace DirittoMigrantiAPI.API
         }
 
         [Authorize(Roles = "Consultant")]
-        [HttpGet]
+        [HttpGet("getN{conversationId}", Name = "getNotes")]
         public IActionResult GetNotesAPI(long conversationId)
         {
             String notes = null;
@@ -115,7 +115,7 @@ namespace DirittoMigrantiAPI.API
         }
 
         [Authorize(Roles = "Consultant")]
-        [HttpPost]
+        [HttpPost("editN", Name = "editNotes")]
         public IActionResult EditNotes(long conversationId, string text)
         {
             string notes = null;
