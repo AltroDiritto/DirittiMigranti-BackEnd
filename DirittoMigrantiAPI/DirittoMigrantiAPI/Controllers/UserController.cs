@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DirittoMigrantiAPI.Models;
 using DirittoMigrantiAPI.Models.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace DirittoMigrantiAPI.Controllers
     {
         private readonly DbSet<User> users;
         private readonly DbSet<UserAuth> usersAuth;
+
         public UserController(DbSet<User> users, DbSet<UserAuth> usersAuth)
         {
             this.users = users;
@@ -20,18 +22,28 @@ namespace DirittoMigrantiAPI.Controllers
 
         protected bool CheckCredentials(UserAuth userAuth)
         {
-            return usersAuth.Any((u) => u.CheckCredentials(userAuth));
+            return usersAuth.Find(userAuth.Username).CheckPassword(userAuth.Password);
         }
 
         protected long GetUserId(UserAuth userAuth)
         {
-            return usersAuth.Where((u) => u.CheckCredentials(userAuth)).ToList()[0].UserId;
+            return usersAuth.Find(userAuth.Username).UserId;
+            //return usersAuth.Where((u) => u.CheckCredentials(userAuth)).Single().UserId;
         }
 
         protected User GetUser(long id)
         {
             return users.Find(id);
+            //TODO utilizzare il find
+            //return users.Where((user) => user.Id == id).Single();
         }
+
+        /*
+        protected async Task<User> GetUser(long id)
+        {
+            //return await users.FindAsync(id);
+            return users.Find(id);
+        }*/
 
         #region Consultant
         public Consultant GetConsultant(long id)

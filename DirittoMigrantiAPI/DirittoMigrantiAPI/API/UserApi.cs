@@ -34,15 +34,19 @@ namespace DirittoMigrantiAPI.API
             if (!CheckCredentials(userAuth))
                 return Unauthorized();
 
+
+            long userId = GetUserId(userAuth);
+            User user = GetUser(userId);
+
+            //TODO check user!=null
+
             //Ok, l'utente ha fornito credenziali valide, creiamogli una ClaimsIdentity
             var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
 
-            long userId = GetUserId(userAuth);
-           // User user = GetUser(userId);
 
             //Aggiungiamo uno o più claim relativi all'utente loggato
-            //  identity.AddClaim(new Claim(ClaimTypes.Role, user is Operator ? "Operator" : "Consultant"));
-             identity.AddClaim(new Claim(ClaimTypes.SerialNumber, userId.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.Role, user is Operator ? "Operator" : "Consultant"));
+            identity.AddClaim(new Claim(ClaimTypes.SerialNumber, userId.ToString()));
 
             //Incapsuliamo l'identità in una ClaimsPrincipal l'associamo alla richiesta corrente
             HttpContext.User = new ClaimsPrincipal(identity);
