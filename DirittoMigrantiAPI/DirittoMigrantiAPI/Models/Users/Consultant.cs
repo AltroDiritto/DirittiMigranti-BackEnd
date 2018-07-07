@@ -5,6 +5,9 @@ namespace DirittoMigrantiAPI.Models
 {
     public class Consultant : User
     {
+        public ICollection<News> WrittenNews { get; set; }
+        public ICollection<Practice> WrittenPractices { get; set; }
+
         List<MessageExchange> starredConversations;
 
         public Consultant():base(){}

@@ -9,7 +9,7 @@ namespace DirittoMigrantiAPI.Models
         [Key]
         public long Id { get; set; }
         [Required]
-        public User Writer { get; set; }
+        public Consultant Writer { get; set; }
         [Required]
         public DateTime CreationDate { get; set; }
         [Required]        
@@ -25,7 +25,7 @@ namespace DirittoMigrantiAPI.Models
 
         public Content() { }
 
-        public Content(User writer, string title, string text, string attachmentUrl)
+        public Content(Consultant writer, string title, string text, string attachmentUrl)
         {
             this.Writer = writer;
             this.Title = title;

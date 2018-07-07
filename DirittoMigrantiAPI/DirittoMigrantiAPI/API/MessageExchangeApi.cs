@@ -22,8 +22,6 @@ namespace DirittoMigrantiAPI.API
         [Authorize(Roles = "Operator")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("newC", Name = "NewConversation")]
-        //TODO controllo se è un'operatore
-        //Se è un operatore non dovrebbe essere già gestito da Authorize
         public IActionResult Create([FromBody] Message message)
         {
             if (!ModelState.IsValid)
