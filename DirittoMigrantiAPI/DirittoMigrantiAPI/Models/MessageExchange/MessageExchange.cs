@@ -18,17 +18,17 @@ namespace DirittoMigrantiAPI.Models
 
         public MessageExchange(Message message)
         {
-            if (!(message.author is Operator)) throw new ArgumentException("");
+            if (!(message.Author is Operator)) throw new ArgumentException("");
 
             //se il messaggio è di un consulente, crasha il cast
-            conversationOwner = (Operator)message.author;
+            conversationOwner = (Operator)message.Author;
             messages.Add(message);
             creationDate = DateTime.Now;
         }
 
         public bool AddMessage(Message message)
         {
-            if (message.author == conversationOwner || message.author is Consultant)
+            if (message.Author == conversationOwner || message.Author is Consultant)
             {
                 messages.Add(message);
                 return true;
@@ -47,13 +47,13 @@ namespace DirittoMigrantiAPI.Models
         {
             if (messages != null)
                 if (messages.Count > 0)
-                    return messages[messages.Count - 1].creationDate;
+                    return messages[messages.Count - 1].CreationDate;
             return null;
         }
 
         public bool IsThisUserInTheConversation(User user)
         {
-            return messages.Any((message) => message.author == user);
+            return messages.Any((message) => message.Author == user);
         }
 
         public bool IsThisUserTheOwner(User user)
