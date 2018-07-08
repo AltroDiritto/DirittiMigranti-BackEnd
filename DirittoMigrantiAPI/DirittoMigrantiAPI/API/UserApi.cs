@@ -23,7 +23,7 @@ namespace DirittoMigrantiAPI.API
         [HttpPost("login", Name = "Login")]
         public IActionResult TryToLogin([FromBody] UserAuth userAuth)
         {
-            //TokenRequest è una nostra classe contenente le proprietà Username e Password
+            // TokenRequest è una nostra classe contenente le proprietà Username e Password
             //Avvisiamo il client se non ha fornito tali valori
             if (!ModelState.IsValid) return BadRequest();
 
