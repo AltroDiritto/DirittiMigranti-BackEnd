@@ -32,6 +32,7 @@ namespace DirittoMigrantiAPI.Controllers
         private bool DeleteContent(long contentId)
         {
             var content = GetContent(contentId);
+            if (content == null) return false;
             contents.Remove(content);
             var check = GetContent(contentId);
             return check != null;
@@ -41,11 +42,11 @@ namespace DirittoMigrantiAPI.Controllers
         #region NEWS 
         public News GetNews(long id)
         {
-            News news = (News)GetContent(id);
-            if (news == null) return null;
+            var content = GetContent(id);
+            if (content == null || !(content is News)) return null;
 
-            if (!news.IsPublished)
-                return null;
+            News news = (News)content;
+            if (!news.IsPublished) return null;
             return news;
         }
 
@@ -57,6 +58,7 @@ namespace DirittoMigrantiAPI.Controllers
         public bool SetNewsState(long contentId, bool isPublished)
         {
             News news = GetNews(contentId);
+            if (news == null) return false;
             if (isPublished)
                 news.Publish();
             else news.Hide();
@@ -65,6 +67,7 @@ namespace DirittoMigrantiAPI.Controllers
 
         public bool DeleteNews(long contentId)
         {
+            //serve controllare se il contenuto è effettivamente una news?
             return DeleteContent(contentId);
         }
         #endregion
@@ -74,7 +77,7 @@ namespace DirittoMigrantiAPI.Controllers
         {
             var content = GetContent(contentId);
 
-            if (!(content is Practice)) return null;//TODO farlo ovunque
+            if (content ==null || !(content is Practice)) return null;//TODO farlo ovunque
 
             Practice practice = (Practice)content;
             if (practice.IsThisPrivate())
@@ -86,7 +89,7 @@ namespace DirittoMigrantiAPI.Controllers
         public Practice GetPrivatePractice(long contentId)
         {
             var content = GetContent(contentId);
-            if (!(content is Practice)) return null;
+            if (content == null || !(content is Practice)) return null;
 
             Practice practice = (Practice)content;           
             return practice;
