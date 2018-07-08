@@ -107,46 +107,35 @@ namespace DirittoMigrantiAPI
             //creo utente
             var operator1 = new Operator
             {
-                Id = IdGenerator(context),
+                //Id = IdGenerator(context),
                 Email = "utente18@example.com",
                 IsActive = true
             };
-            var s = context.Users.Add(operator1);
+            context.Users.Add(operator1);       
 
-            //creo credenziali
-            var auth1 = new UserAuth("operatore", "operatore", s.Entity.Id);
-            context.UsersAuth.Add(auth1);
-
-            //creo utente
             Consultant consultant = new Consultant
             {
-                Id = IdGenerator(context),
+               // Id = IdGenerator(context),
                 Email = "utente882@example.com"
             };
-            s = context.Users.Add(consultant);
+            context.Users.Add(consultant);
 
-            //creo credenziali
-            var auth2 = new UserAuth("consultant", "consultant", s.Entity.Id);
-            context.UsersAuth.Add(auth2);
+            context.SaveChanges();//qui vengono generati gli id degli user
+
+            //creo credenziali con gli id degli user
+            var authOperator1 = new UserAuth("operatore", "operatore", operator1.Id);
+            context.UsersAuth.Add(authOperator1);
+   
+            var authConsultant = new UserAuth("consultant", "consultant", consultant.Id);
+            context.UsersAuth.Add(authConsultant);
 
             context.SaveChanges();
 
+            //Per creare i db
             users.Add(operator1);
             users.Add(consultant);
         }
-
-        private static long IdGenerator(UserContext context)
-        {
-            Random rnd = new Random();
-            long num;
-            do
-            {
-                num = (long)rnd.Next(0, 43 * 9900000);
-            } while (context.Users.Find(num) != null);
-
-            return num;
-        }
-
+        
         private static void AddConversationTestData(MessageExchangesContext context)
         {
             Message firstMessage = new Message(users[0], "Testo di prova 1 messaggio");
