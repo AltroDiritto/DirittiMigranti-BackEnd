@@ -99,7 +99,7 @@ namespace DirittoMigrantiAPI.API
         }
 
         [Authorize(Roles = "Consultant")]
-        [HttpPost("setOpState?userId={userId}&state={newState}", Name = "SetOperatorState")]
+        [HttpPost("setOpState", Name = "SetOperatorState")]
         public IActionResult SetOperatorStateAPI(long userId, bool newState)
         {
             return Ok(ChangeState(userId, newState));
