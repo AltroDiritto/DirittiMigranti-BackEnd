@@ -2,10 +2,18 @@
 using DirittoMigrantiAPI.Contexts;
 
 namespace DirittoMigrantiAPI.API{    [Route("api/cont")]    public class ContentApi : ContentController, IPracticeAPI, INewsAPI    {        private readonly MyAppContext context;        public ContentApi(MyAppContext context) : base(context.Contents)        { this.context = context; }
-        //A che serve questo metodo?
+
+        //A che serve questo metodo?
         //Non presente nell'UML
-        //[HttpPost]        //public IActionResult SetStateAPI(bool newState)
-        //{        //    return BadRequest();        //}
+        //[HttpPost]
+        //public IActionResult SetStateAPI(bool newState)
+        //{
+        //    return BadRequest();
+        //}
+
+        [HttpGet("get/{contentId}", Name = "Get")]
+        public IActionResult Get(long contentId)        {
+            Content c = base.GetContent(contentId);            if (c == null)                return NotFound();            return Ok(c);        }
 
         #region NEWS        //Tutti possono richiedere news
         [HttpGet("getN/{contentId}", Name = "GetNews")]

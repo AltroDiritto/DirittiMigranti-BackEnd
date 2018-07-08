@@ -16,12 +16,12 @@ namespace DirittoMigrantiAPI.Controllers
             this.contents = contents;
         }
 
-        private Content GetContent(long id)
+        protected Content GetContent(long id)
         {
             return contents.Find(id);
         }
 
-        private Content NewContent(Content textContent)
+        protected Content NewContent(Content textContent)
         {
             if (textContent == null) return null;
 

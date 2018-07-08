@@ -21,7 +21,7 @@ namespace DirittoMigrantiAPI.Models
         {
             Messages = new List<Message>();//TODO vedere come farlo meglio
 
-            if (!(message.Author is Operator)) throw new ArgumentException("");
+            if (!(message.Author is Operator)) throw new ArgumentException("Conversation created by not an Operator.");
 
             //se il messaggio è di un consulente, crasha il cast
             conversationOwner = (Operator)message.Author;

@@ -40,14 +40,20 @@ namespace DirittoMigrantiAPI.Controllers
             //TODO utilizzare il find
             //return users.Where((user) => user.Id == id).Single();
         }
-        
+
+        protected T GetUser<T>(long id)
+        {
+            User result = GetUser(id);
+            if (result == null || !(result is T)) return default(T);
+            return (T)(object)result;
+        }
+
         #region Consultant
         public Consultant GetConsultant(long id)
-        {
-            var result = GetUser(id);
-            if (result == null || !(result is Consultant)) return null;
-            return (Consultant)result;
-        }
+        {            
+            return GetUser<Consultant>(id);
+        }       
+
         #endregion
 
 

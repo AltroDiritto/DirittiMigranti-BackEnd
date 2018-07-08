@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using DirittoMigrantiAPI.Contexts;
 using DirittoMigrantiAPI.Controllers;
 using DirittoMigrantiAPI.Models;
@@ -43,16 +44,15 @@ namespace DirittoMigrantiAPI.API
         [HttpGet("getME/{id}", Name = "GetMessageExchange")]
         public IActionResult GetById(long id)
         {
-            //TODO ottenere lo user 
-            Consultant user = null;
+            var userId = (User as ClaimsPrincipal)?.FindFirstValue(ClaimTypes.SerialNumber);
+            if (string.IsNullOrEmpty(userId)) return BadRequest();
+
+            User user = context.Users.Find(long.Parse(userId));
 
             var messageExchange = GetMessageExchange(id);
-            if (messageExchange == null)
-            {
-                return NotFound();
-            }
+            if (messageExchange == null) return NotFound();
 
-            if (!(user is Consultant || messageExchange.IsThisUserTheOwner(user))) return NotFound();
+            if (!(user is Consultant || messageExchange.IsThisUserTheOwner(user))) return Unauthorized();
 
             return Ok(messageExchange);
         }
@@ -62,8 +62,8 @@ namespace DirittoMigrantiAPI.API
         public IActionResult GetListOrderedByLastUpdate()
         {
             var messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
-            var test = context.Messages.ToList();
-            messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
+            //var test = context.Messages.ToList();
+            //messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
 
             if (messageExchange == null) return NotFound();
 

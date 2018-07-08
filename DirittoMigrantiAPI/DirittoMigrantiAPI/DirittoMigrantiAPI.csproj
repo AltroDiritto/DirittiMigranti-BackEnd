@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="API\ContentApi-merge.cs" />
     <Compile Remove="Contexts\ContentContext.cs" />
     <Compile Remove="Contexts\MessageExchangesContext.cs" />
     <Compile Remove="Contexts\UserContext.cs" />
