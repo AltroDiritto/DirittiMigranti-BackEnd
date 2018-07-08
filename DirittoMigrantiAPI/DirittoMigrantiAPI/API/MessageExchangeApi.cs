@@ -88,7 +88,7 @@ namespace DirittoMigrantiAPI.API
 
         [Authorize(Roles = "Operator, Consultant")]
         [HttpPost("addM", Name = "addMessage")]
-        public IActionResult AddMessage(long conversationId, [FromBody] Message message)
+        public IActionResult AddMessage([FromForm] long conversationId, [FromBody] Message message)
         {
             var isAdded = base.AddMessageToConversation(conversationId, message);
             if (!isAdded) return BadRequest();
@@ -108,7 +108,7 @@ namespace DirittoMigrantiAPI.API
 
         [Authorize(Roles = "Consultant")]
         [HttpPost("editN", Name = "editNotes")]
-        public IActionResult EditNotes(long conversationId, string text)
+        public IActionResult EditNotes([FromForm] long conversationId, [FromForm] string text)
         {
             String notes = base.EditNotesInConversation(conversationId, text);
             if (notes == null) return NotFound();
