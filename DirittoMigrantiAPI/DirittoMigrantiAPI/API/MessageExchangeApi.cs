@@ -42,7 +42,6 @@ namespace DirittoMigrantiAPI.API
         }
 
         [Authorize(Roles = "Operator, Consultant")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //NOTA: il Name serve per la chiamata da qua dentro.        
         [HttpGet("getME/{id}", Name = "GetMessageExchange")]
         public IActionResult GetById(long id)
@@ -91,24 +90,19 @@ namespace DirittoMigrantiAPI.API
         [HttpPost("addM", Name = "addMessage")]
         public IActionResult AddMessage(long conversationId, [FromBody] Message message)
         {
-            var flag = base.AddMessageToConversation(conversationId, message);
-            if (flag == false)
-            {
-                return BadRequest();
-            }
-            return Ok(flag);
+            var isAdded = base.AddMessageToConversation(conversationId, message);
+            if (!isAdded) return BadRequest();
+
+            return CreatedAtRoute("GetMessageExchange", conversationId);
         }
 
         [Authorize(Roles = "Consultant")]
         [HttpGet("getN/{conversationId}", Name = "getNotes")]
         public IActionResult GetNotesAPI(long conversationId)
         {
-            String notes = null;
-            notes = base.GetMessageExchange(conversationId).Notes;
-            if (notes == null)
-            {
-                return NotFound();
-            }
+            String notes = base.GetNotes(conversationId);
+            if (notes == null) return NotFound();
+
             return Ok(notes);
         }
 
@@ -116,12 +110,9 @@ namespace DirittoMigrantiAPI.API
         [HttpPost("editN", Name = "editNotes")]
         public IActionResult EditNotes(long conversationId, string text)
         {
-            string notes = null;
-            notes = base.EditNotesInConversation(conversationId, text);
-            if (notes == null)
-            {
-                return NotFound();
-            }
+            String notes = base.EditNotesInConversation(conversationId, text);
+            if (notes == null) return NotFound();
+
             return Ok(notes);
         }
 

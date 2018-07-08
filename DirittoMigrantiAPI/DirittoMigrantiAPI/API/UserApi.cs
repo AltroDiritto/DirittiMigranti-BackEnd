@@ -98,22 +98,34 @@ namespace DirittoMigrantiAPI.API
             return Ok(allOperators);
         }
 
-        [Authorize(Roles = "Consultant")]
+       // [Authorize(Roles = "Consultant")]
         [HttpPost("setOpState", Name = "SetOperatorState")]
-        public IActionResult SetOperatorStateAPI(long userId, bool newState)
+        public IActionResult SetOperatorStateAPI([FromForm] long userId, [FromForm] bool newState)
         {
             return Ok(ChangeState(userId, newState));
         }
         #endregion
 
         #region Consultant
-        [HttpGet("getCons", Name = "getConsultant")]
+        [HttpGet("getCons/{userId}", Name = "getConsultant")]
         public IActionResult GetConsultantAPI(long userId)
         {
             var consultant = GetConsultant(userId);
             if (consultant == null)
                 return NotFound();
             return Ok(consultant);
+        }
+
+        [HttpGet("getMyUser", Name = "getMyUser")]
+        public IActionResult GetMyUser()
+        {
+            var userId = (User as ClaimsPrincipal)?.FindFirstValue(ClaimTypes.SerialNumber);
+            if (string.IsNullOrEmpty(userId)) return BadRequest();
+
+            var user = GetUser(long.Parse(userId));
+            if (user == null)
+                return NotFound();
+            return Ok(user);
         }
         #endregion
         //Non è necessario creare il token qui, lo possiamo creare da un middleware (perchè?)

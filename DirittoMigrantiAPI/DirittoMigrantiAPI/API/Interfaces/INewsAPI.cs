@@ -12,6 +12,6 @@ namespace DirittoMigrantiAPI.API
         IActionResult GetNewsAPI(long contentId);
         IActionResult CreateNewsAPI(News news);
         IActionResult DeleteNewsAPI(long contentId);
-        IActionResult SetStateAPI(long newsId, bool isPublished);
+        IActionResult SetNewsStateAPI(long newsId, bool isPublished);
     }
 }

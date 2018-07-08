@@ -6,24 +6,24 @@ namespace DirittoMigrantiAPI.Models
     public class Content
     {
         // Id used as a key in the dictionary where all the users are stored
-        [Key]
+        //[Key]
         public long Id { get; set; }
 
-        [Required]
+        //[Required]
         public Consultant Writer { get; set; }
 
-        [Required]
+       // [Required]
         public DateTime CreationDate { get; set; }
 
-        [Required]
-        [StringLength(100, MinimumLength = 2)]
+      //  [Required]
+        //[StringLength(maximumLength: 100, MinimumLength = 2)]
         public string Title { get; set; }
 
-        [Required]
-        [StringLength(5000, MinimumLength = 1)]
+      //  [Required]
+      //  [StringLength(maximumLength: 5000)]
         public string Text { get; set; }
 
-        [Url]
+       // [Url]
         public string AttachedURL { get; set; }
 
         DateTime lastTextUpdate;
@@ -38,6 +38,7 @@ namespace DirittoMigrantiAPI.Models
             UpdateText(text);
             this.AttachedURL = attachmentUrl;
             CreationDate = DateTime.Now;
+            lastTextUpdate = CreationDate;
         }
 
         private string UpdateText(string text)

@@ -31,9 +31,9 @@ namespace DirittoMigrantiAPI.Controllers
 
         private bool DeleteContent(long contentId)
         {
-            var content = contents.Find(contentId);
+            var content = GetContent(contentId);
             contents.Remove(content);
-            var check = contents.Find(contentId);
+            var check = GetContent(contentId);
             return check != null;
 
         }
@@ -73,6 +73,7 @@ namespace DirittoMigrantiAPI.Controllers
         public Practice GetPublicPractice(long contentId)
         {
             var content = GetContent(contentId);
+
             if (!(content is Practice)) return null;//TODO farlo ovunque
 
             Practice practice = (Practice)content;

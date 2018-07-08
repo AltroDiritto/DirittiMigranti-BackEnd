@@ -16,7 +16,7 @@ namespace DirittoMigrantiAPI
 {
     public class Startup
     {
-        static private List<User> users;
+        static public List<User> users;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -104,38 +104,48 @@ namespace DirittoMigrantiAPI
         {
             users = new List<User>();
 
-            //creo utente
+            #region Users
             var operator1 = new Operator
             {
                 //Id = IdGenerator(context),
                 Email = "utente18@example.com",
                 IsActive = true
             };
-            context.Users.Add(operator1);       
-
             Consultant consultant = new Consultant
             {
-               // Id = IdGenerator(context),
+                // Id = IdGenerator(context),
                 Email = "utente882@example.com"
             };
+            var operator2 = new Operator
+            {
+                //Id = IdGenerator(context),
+                Email = "utente118@example.com",
+                IsActive = false
+            };
+
+            //I add them to the context and I save
+            context.Users.Add(operator1);
             context.Users.Add(consultant);
-
+            context.Users.Add(operator2);
             context.SaveChanges();//qui vengono generati gli id degli user
+            #endregion
 
-            //creo credenziali con gli id degli user
+            #region Credentials
             var authOperator1 = new UserAuth("operatore", "operatore", operator1.Id);
-            context.UsersAuth.Add(authOperator1);
-   
             var authConsultant = new UserAuth("consultant", "consultant", consultant.Id);
-            context.UsersAuth.Add(authConsultant);
+            var authOperator2 = new UserAuth("operatore2", "operatore2", operator2.Id);
 
+            context.UsersAuth.Add(authOperator1);
+            context.UsersAuth.Add(authConsultant);
+            context.UsersAuth.Add(authOperator2);
             context.SaveChanges();
+            #endregion
 
             //Per creare i db
             users.Add(operator1);
             users.Add(consultant);
         }
-        
+
         private static void AddConversationTestData(MessageExchangesContext context)
         {
             Message firstMessage = new Message(users[0], "Testo di prova 1 messaggio");

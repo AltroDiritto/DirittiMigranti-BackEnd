@@ -37,14 +37,7 @@ namespace DirittoMigrantiAPI.Controllers
             //TODO utilizzare il find
             //return users.Where((user) => user.Id == id).Single();
         }
-
-        /*
-        protected async Task<User> GetUser(long id)
-        {
-            //return await users.FindAsync(id);
-            return users.Find(id);
-        }*/
-
+        
         #region Consultant
         public Consultant GetConsultant(long id)
         {

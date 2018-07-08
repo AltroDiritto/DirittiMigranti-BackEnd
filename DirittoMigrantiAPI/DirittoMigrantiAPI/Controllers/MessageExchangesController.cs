@@ -20,6 +20,7 @@ namespace DirittoMigrantiAPI.Controllers
         #region CONVERSATION CONTROLLER        
         public MessageExchange NewConversation(Message message)
         {
+            //TODO sistemare trycatch
             try
             {
                 MessageExchange conversation = new MessageExchange(message);
@@ -30,26 +31,33 @@ namespace DirittoMigrantiAPI.Controllers
             catch (ArgumentException) { return null; }
         }
         
-        public MessageExchange GetMessageExchange(long MessageExchangeId)
+        public MessageExchange GetMessageExchange(long messageExchangeId)
         {
-            return messageExchanges.Find(MessageExchangeId);
-            //return messageExchanges.First(mn => mn.Id == MessageExchangeId);
+            return messageExchanges.Find(messageExchangeId);
+            //return messageExchanges.First(mn => mn.Id == messageExchangeId);
         }
 
-        public bool AddMessageToConversation(long MessageExchangeId, Message message)
+        public bool AddMessageToConversation(long messageExchangeId, Message message)
         {
-            //TODO controllare chi lo chiama
-            return GetMessageExchange(MessageExchangeId).AddMessage(message);
+            var conv = GetMessageExchange(messageExchangeId);
+
+            if (conv == null) return false;
+
+            return conv.AddMessage(message);
         }
 
-        public string GetNotes(long id)
+        public String GetNotes(long messageExchangeId)
         {
-            return GetMessageExchange(id).Notes;
+            var conv = GetMessageExchange(messageExchangeId);
+
+            if (conv == null) return null;
+
+            return conv.Notes;
         }
 
-        public string EditNotesInConversation(long MessageExchangeId, string notes)
+        public string EditNotesInConversation(long messageExchangeId, string notes)
         {
-            return GetMessageExchange(MessageExchangeId).EditNotes(notes);
+            return GetMessageExchange(messageExchangeId).EditNotes(notes);
         }
         #endregion
 
