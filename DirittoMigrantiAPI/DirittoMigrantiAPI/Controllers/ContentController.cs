@@ -84,9 +84,10 @@ namespace DirittoMigrantiAPI.Controllers
 
         public Practice GetPrivatePractice(long contentId)
         {
-            Practice practice = (Practice)GetContent(contentId);
-            if (!practice.IsThisPrivate())
-                return null;
+            var content = GetContent(contentId);
+            if (!(content is Practice)) return null;
+
+            Practice practice = (Practice)content;           
             return practice;
         }
 

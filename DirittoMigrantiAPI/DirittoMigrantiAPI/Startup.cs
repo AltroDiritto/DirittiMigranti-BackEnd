@@ -172,11 +172,13 @@ namespace DirittoMigrantiAPI
             context.Contents.Add(news1);
             context.Contents.Add(news2);
 
-            Practice practice1 = new Practice((Consultant)users[1], "Titolo practica 1", "Lorem ipsum...", true);
-            Practice practice2 = new Practice((Consultant)users[1], "Titolo practica 2", "Lorem ipsum...", false);
+            Practice practice1 = new Practice((Consultant)users[1], "Titolo practica 1", "Lorem ipsum1...", true);
+            Practice practice2 = new Practice((Consultant)users[1], "Titolo practica 2", "Lorem ipsum2...", false);
+            Practice practice3 = new Practice((Consultant)users[1], "Titolo practica 2", "Lorem ipsum3...", true);
 
             context.Contents.Add(practice1);
-            context.Contents.Add(practice1);
+            context.Contents.Add(practice2);
+            context.Contents.Add(practice3);
 
             context.SaveChanges();
         }
