@@ -57,7 +57,10 @@ namespace DirittoMigrantiAPI.Controllers
 
         public string EditNotesInConversation(long messageExchangeId, string notes)
         {
-            return GetMessageExchange(messageExchangeId).EditNotes(notes);
+            var conv = GetMessageExchange(messageExchangeId);
+
+            if (conv == null) return null;
+            return conv.EditNotes(notes);
         }
         #endregion
 

@@ -45,7 +45,7 @@ namespace DirittoMigrantiAPI.Controllers
         public Consultant GetConsultant(long id)
         {
             var result = GetUser(id);
-            if (result == null) return null;
+            if (result == null || !(result is Consultant)) return null;
             return (Consultant)result;
         }
         #endregion
@@ -55,7 +55,7 @@ namespace DirittoMigrantiAPI.Controllers
         public Operator GetOperator(long id)
         {
             var result = GetUser(id);
-            if (result == null) return null;
+            if (result == null || !(result is Operator)) return null;
             return (Operator)result;
         }
 
