@@ -59,7 +59,7 @@ namespace DirittoMigrantiAPI.API
         #region Operator
         //[AllowAnonymous]
         [HttpPost("newOp", Name = "NewOperator")]
-        public IActionResult NewOperatorAPI([FromBody] UserAuth auth,[FromBody] Operator op)
+        public IActionResult NewOperatorAPI([FromForm] UserAuth auth,[FromForm] Operator op)
         {
             if (!ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace DirittoMigrantiAPI.API
             return Ok(allOperators);
         }
 
-       // [Authorize(Roles = "Consultant")]
+        [Authorize(Roles = "Consultant")]
         [HttpPost("setOpState", Name = "SetOperatorState")]
         public IActionResult SetOperatorStateAPI([FromForm] long userId, [FromForm] bool newState)
         {
