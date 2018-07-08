@@ -22,12 +22,16 @@ namespace DirittoMigrantiAPI.Controllers
 
         protected bool CheckCredentials(UserAuth userAuth)
         {
-            return usersAuth.Find(userAuth.Username).CheckPassword(userAuth.Password);
+            var result = usersAuth.Find(userAuth.Username);
+            if (result == null) return false;
+            return result.CheckPassword(userAuth.Password);
         }
 
-        protected long GetUserId(UserAuth userAuth)
+        protected long? GetUserId(String userName)
         {
-            return usersAuth.Find(userAuth.Username).UserId;
+            var result = usersAuth.Find(userName);
+            if (result == null) return null;
+            return result.UserId;
             //return usersAuth.Where((u) => u.CheckCredentials(userAuth)).Single().UserId;
         }
 
@@ -41,7 +45,9 @@ namespace DirittoMigrantiAPI.Controllers
         #region Consultant
         public Consultant GetConsultant(long id)
         {
-            return (Consultant)GetUser(id);
+            var result = GetUser(id);
+            if (result == null) return null;
+            return (Consultant)result;
         }
         #endregion
 
@@ -49,7 +55,9 @@ namespace DirittoMigrantiAPI.Controllers
         #region Operator
         public Operator GetOperator(long id)
         {
-            return (Operator)GetUser(id);
+            var result = GetUser(id);
+            if (result == null) return null;
+            return (Operator)result;
         }
 
         public Operator NewOperator(Operator op)
@@ -63,6 +71,7 @@ namespace DirittoMigrantiAPI.Controllers
         public bool ChangeState(long operatorId, bool newState)
         {
             Operator _operator = GetOperator(operatorId);
+            if (_operator == null) return false;
             return _operator.ChangeState(newState);
         }
 

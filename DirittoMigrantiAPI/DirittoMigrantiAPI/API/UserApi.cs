@@ -22,23 +22,20 @@ namespace DirittoMigrantiAPI.API
         [HttpPost("login", Name = "Login")]
         public IActionResult TryToLogin([FromBody] UserAuth userAuth)
         {
-            //TokenRequest è una nostra classe contenente le proprietà Username e Password
+            // TokenRequest è una nostra classe contenente le proprietà Username e Password
             //Avvisiamo il client se non ha fornito tali valori
-            if (!ModelState.IsValid)
-            {
-                //View(userAuth);
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return BadRequest();
 
-            //Lo avvisiamo anche se non ha fornito credenziali valide
-            if (!CheckCredentials(userAuth))
-                return Unauthorized();
+            // check username and get userid
+            var userId = GetUserId(userAuth.Username);
+            if (!userId.HasValue) Unauthorized();
 
+            // check credentials
+            if (!CheckCredentials(userAuth)) return Unauthorized();
 
-            long userId = GetUserId(userAuth);
-            User user = GetUser(userId);
-
-            //TODO check user!=null
+            // get user
+            User user = GetUser(userId.Value);
+            if (user == null) Unauthorized();
 
             //Ok, l'utente ha fornito credenziali valide, creiamogli una ClaimsIdentity
             var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
