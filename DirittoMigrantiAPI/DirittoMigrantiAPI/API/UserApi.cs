@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using DirittoMigrantiAPI.Contexts;
 using DirittoMigrantiAPI.Controllers;
 using DirittoMigrantiAPI.Models;
 using DirittoMigrantiAPI.Models.Users;
@@ -13,10 +14,10 @@ namespace DirittoMigrantiAPI.API
     [Route("api/user")]
     public class UserControllerAPI : UserController, IConsultantAPI, IOperatorAPI
     {
-        private readonly UserContext _context;
-        public UserControllerAPI(UserContext context) : base(context.Users, context.UsersAuth)
+        private readonly MyAppContext context;
+        public UserControllerAPI(MyAppContext context) : base(context.Users, context.UsersAuth)
         {
-            this._context = context;
+            this.context = context;
         }
 
         [HttpPost("login", Name = "Login")]
@@ -24,21 +25,18 @@ namespace DirittoMigrantiAPI.API
         {
             //TokenRequest è una nostra classe contenente le proprietà Username e Password
             //Avvisiamo il client se non ha fornito tali valori
-            if (!ModelState.IsValid)
-            {
-                //View(userAuth);
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return BadRequest();
 
-            //Lo avvisiamo anche se non ha fornito credenziali valide
-            if (!CheckCredentials(userAuth))
-                return Unauthorized();
+            // check username and get userid
+            var userId = GetUserId(userAuth.Username);
+            if (!userId.HasValue) Unauthorized();
 
+            // check credentials
+            if (!CheckCredentials(userAuth)) return Unauthorized();
 
-            long userId = GetUserId(userAuth);
-            User user = GetUser(userId);
-
-            //TODO check user!=null
+            // get user
+            User user = GetUser(userId.Value);
+            if (user == null) Unauthorized();
 
             //Ok, l'utente ha fornito credenziali valide, creiamogli una ClaimsIdentity
             var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
@@ -59,7 +57,7 @@ namespace DirittoMigrantiAPI.API
         #region Operator
         //[AllowAnonymous]
         [HttpPost("newOp", Name = "NewOperator")]
-        public IActionResult NewOperatorAPI([FromBody] UserAuth auth,[FromBody] Operator op)
+        public IActionResult NewOperatorAPI([FromBody] UserAuth auth, [FromBody] Operator op)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +70,7 @@ namespace DirittoMigrantiAPI.API
             if (checkOperator == null)
                 return BadRequest();
 
-            _context.SaveChanges();
+            context.SaveChanges();
 
             return Ok(checkOperator);
         }
@@ -98,7 +96,7 @@ namespace DirittoMigrantiAPI.API
             return Ok(allOperators);
         }
 
-       // [Authorize(Roles = "Consultant")]
+        // [Authorize(Roles = "Consultant")]
         [HttpPost("setOpState", Name = "SetOperatorState")]
         public IActionResult SetOperatorStateAPI([FromForm] long userId, [FromForm] bool newState)
         {

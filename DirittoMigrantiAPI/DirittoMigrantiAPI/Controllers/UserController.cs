@@ -25,10 +25,9 @@ namespace DirittoMigrantiAPI.Controllers
             return usersAuth.Find(userAuth.Username).CheckPassword(userAuth.Password);
         }
 
-        protected long GetUserId(UserAuth userAuth)
+        protected Nullable<long> GetUserId(string username)
         {
-            return usersAuth.Find(userAuth.Username).UserId;
-            //return usersAuth.Where((u) => u.CheckCredentials(userAuth)).Single().UserId;
+            return usersAuth.Find(username).UserId;
         }
 
         protected User GetUser(long id)

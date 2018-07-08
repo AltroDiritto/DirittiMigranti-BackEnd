@@ -28,6 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Contexts\ContentContext.cs" />
+    <Compile Remove="Contexts\MessageExchangesContext.cs" />
+    <Compile Remove="Contexts\UserContext.cs" />
     <Compile Remove="Controllers\ValuesController.cs" />
     <Compile Remove="Controllers\TockenController.cs" />
     <Compile Remove="Models\Person.cs" />

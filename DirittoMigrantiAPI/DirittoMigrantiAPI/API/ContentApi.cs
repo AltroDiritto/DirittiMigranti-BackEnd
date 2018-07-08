@@ -1,6 +1,7 @@
-﻿using System;using DirittoMigrantiAPI.Controllers;using DirittoMigrantiAPI.Models;using DirittoMigrantiAPI.Models.Contexts;using Microsoft.AspNetCore.Mvc;using System.Linq;using Microsoft.AspNetCore.Authorization;using System.Security.Claims;
+﻿using System;using DirittoMigrantiAPI.Controllers;using DirittoMigrantiAPI.Models;using Microsoft.AspNetCore.Mvc;using System.Linq;using Microsoft.AspNetCore.Authorization;using System.Security.Claims;
+using DirittoMigrantiAPI.Contexts;
 
-namespace DirittoMigrantiAPI.API{    [Route("api/cont")]    public class ContentApi : ContentController, IPracticeAPI, INewsAPI    {        private readonly ContentContext _context;        public ContentApi(ContentContext context) : base(context.Contents)        { _context = context; }
+namespace DirittoMigrantiAPI.API{    [Route("api/cont")]    public class ContentApi : ContentController, IPracticeAPI, INewsAPI    {        private readonly MyAppContext context;        public ContentApi(MyAppContext context) : base(context.Contents)        { this.context = context; }
         //A che serve questo metodo?
         //Non presente nell'UML
         //[HttpPost]        //public IActionResult SetStateAPI(bool newState)
@@ -16,12 +17,27 @@ namespace DirittoMigrantiAPI.API{    [Route("api/cont")]    public class Cont
 
             if (!ModelState.IsValid) return BadRequest();
 
-            News checkNews = NewNews(news);            if (checkNews == null) return BadRequest();            _context.SaveChanges();            return Ok(checkNews);        }        [Authorize(Roles = "Consultant")]        [HttpDelete("delN/{contentId}", Name = "DeleteNews")]        public IActionResult DeleteNewsAPI(long contentId)        {
-            var ris = DeleteNews(contentId);            return Ok(ris);        }        //[Authorize(Roles = "Consultant")]        [HttpPost("setN/{newsId}/{isPublished}", Name = "SetNews")]//TODO ricevere parametri        public IActionResult SetNewsStateAPI( long newsId, bool isPublished)        {            return Ok(SetNewsState(newsId, isPublished));        }
+            News checkNews = NewNews(news);            if (checkNews == null) return BadRequest();            context.SaveChanges();            return Ok(checkNews);        }        [Authorize(Roles = "Consultant")]        [HttpDelete("delN/{contentId}", Name = "DeleteNews")]        public IActionResult DeleteNewsAPI(long contentId)        {
+            var ris = DeleteNews(contentId);            context.SaveChanges();            return Ok(ris);        }
+
+        //[Authorize(Roles = "Consultant")]
+        [HttpPost("setN/{newsId}/{isPublished}", Name = "SetNews")]//TODO ricevere parametri
+        public IActionResult SetNewsStateAPI(long newsId, bool isPublished)        {            return Ok(SetNewsState(newsId, isPublished));        }
+
+
+
+
+
+
+
+
         #endregion
         #region PRACTICE        [HttpGet("getPuP/{contentId}", Name = "GetPublicPractice")]
         public IActionResult GetPublicPracticeAPI(long contentId)        {            Practice practice = base.GetPublicPractice(contentId);            if (practice == null)                return NotFound();            return Ok(practice);        }        [Authorize(Roles = "Consultant, Operator")]
-        [HttpGet("getPrP/{contentId}", Name = "GetPrivatePractice")]        public IActionResult GetPrivatePracticeAPI(long contentId)        {            Practice practice = base.GetPrivatePractice(contentId);            if (practice == null)                return NotFound();            return Ok(practice);        }        [Authorize(Roles = "Consultant")]        [HttpPost("newP", Name = "NewPractice")]        public IActionResult CreatePracticeAPI(Practice practice)        {            if (!ModelState.IsValid)            {                return BadRequest();            }            Practice checkPractice = NewPractice(practice);            if (checkPractice == null)                return BadRequest();            _context.SaveChanges();            return Ok(NewPractice(practice));        }        [Authorize(Roles = "Consultant")]        [HttpDelete("delP", Name = "DeletePractice")]        public IActionResult DeletePracticeAPI(long contentId)        {            return Ok(DeletePractice(contentId));        }        [Authorize(Roles = "Consultant")]        [HttpPost("setP", Name = "SetPracticePrivacy")]        public IActionResult SetPracticePrivacyAPI(long practiceId, bool newState)        {            return Ok(SetPracticePrivacy(practiceId, newState));        }
+        [HttpGet("getPrP/{contentId}", Name = "GetPrivatePractice")]        public IActionResult GetPrivatePracticeAPI(long contentId)        {            Practice practice = base.GetPrivatePractice(contentId);            if (practice == null)                return NotFound();            return Ok(practice);        }        [Authorize(Roles = "Consultant")]        [HttpPost("newP", Name = "NewPractice")]        public IActionResult CreatePracticeAPI(Practice practice)        {            if (!ModelState.IsValid)            {                return BadRequest();            }            Practice checkPractice = NewPractice(practice);            if (checkPractice == null)                return BadRequest();            context.SaveChanges();            return Ok(NewPractice(practice));        }        [Authorize(Roles = "Consultant")]        [HttpDelete("delP", Name = "DeletePractice")]        public IActionResult DeletePracticeAPI(long contentId)        {
+            var ris = DeletePractice(contentId);
+
+            context.SaveChanges();            return Ok(ris);        }        [Authorize(Roles = "Consultant")]        [HttpPost("setP", Name = "SetPracticePrivacy")]        public IActionResult SetPracticePrivacyAPI(long practiceId, bool newState)        {            return Ok(SetPracticePrivacy(practiceId, newState));        }
         #endregion
 
     }}

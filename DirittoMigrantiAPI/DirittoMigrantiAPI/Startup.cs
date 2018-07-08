@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using DirittoMigrantiAPI.Contexts;
 using DirittoMigrantiAPI.Models;
-using DirittoMigrantiAPI.Models.Contexts;
 using DirittoMigrantiAPI.Models.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace DirittoMigrantiAPI
 {
@@ -26,16 +26,8 @@ namespace DirittoMigrantiAPI
             //Vedi: https://docs.microsoft.com/en-US/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1&tabs=basicconfiguration
 
             //List of Consultant and Operators
-            services.AddDbContext<UserContext>(options =>
-                                               options.UseSqlite(@"Data Source=diritto-migranti-user.db"));
-
-            //List of Conversations with Messages
-            services.AddDbContext<MessageExchangesContext>(options =>
-                                                           options.UseSqlite(@"Data Source=diritto-migranti-msg.db"));
-
-            //List of News and Practices
-            services.AddDbContext<ContentContext>(options =>
-                                                  options.UseSqlite(@"Data Source=diritto-migranti-content.db"));
+            services.AddDbContext<Contexts.MyAppContext>(options =>
+                                               options.UseSqlite(@"Data Source=diritto-migranti.db"));
             #endregion
 
             #region Middleware
@@ -73,17 +65,13 @@ namespace DirittoMigrantiAPI
             app.UseAuthentication();
 
             #region Context init
-            var userContext = serviceProvider.GetRequiredService<UserContext>();
-            if (userContext.Database.EnsureCreated())
-                AddUserTestData(userContext);
-
-            var contentContext = serviceProvider.GetRequiredService<ContentContext>();
-            if (contentContext.Database.EnsureCreated())
-                AddContentTestData(contentContext);
-
-            var conversationContext = serviceProvider.GetRequiredService<MessageExchangesContext>();
-            if (conversationContext.Database.EnsureCreated())
-                AddConversationTestData(conversationContext);
+            var appContext = serviceProvider.GetRequiredService<MyAppContext>();
+            if (appContext.Database.EnsureCreated())
+            {
+                AddUserTestData(appContext);
+                AddContentTestData(appContext);
+                AddConversationTestData(appContext);
+            }
             #endregion
 
             #region DEBUG
@@ -93,14 +81,14 @@ namespace DirittoMigrantiAPI
 
             if (env.IsDevelopment())
             {
-                app.AddEfDiagrams<UserContext>();
+                app.AddEfDiagrams<Contexts.MyAppContext>();
             }
 
             app.UseMvc();
         }
 
 
-        private static void AddUserTestData(UserContext context)
+        private static void AddUserTestData(MyAppContext context)
         {
             users = new List<User>();
 
@@ -108,18 +96,18 @@ namespace DirittoMigrantiAPI
             var operator1 = new Operator
             {
                 //Id = IdGenerator(context),
-                Email = "utente18@example.com",
+                Email = "operator1@example.com",
                 IsActive = true
             };
             Consultant consultant = new Consultant
             {
                 // Id = IdGenerator(context),
-                Email = "utente882@example.com"
+                Email = "consultant@example.com"
             };
             var operator2 = new Operator
             {
                 //Id = IdGenerator(context),
-                Email = "utente118@example.com",
+                Email = "operator2@example.com",
                 IsActive = false
             };
 
@@ -146,22 +134,25 @@ namespace DirittoMigrantiAPI
             users.Add(consultant);
         }
 
-        private static void AddConversationTestData(MessageExchangesContext context)
+        private static void AddConversationTestData(MyAppContext context)
         {
             Message firstMessage = new Message(users[0], "Testo di prova 1 messaggio");
+            context.Messages.Add(firstMessage);
+
             MessageExchange conv = new MessageExchange(firstMessage);
+            context.MessageExchanges.Add(conv);
+            
+            context.SaveChanges();
+
+           var test= context.MessageExchanges.ToList();
 
             //Message secondMessage = new Message(users[1], "Testo secondo");
 
             //conv.AddMessage(secondMessage);
-
-            context.MessageExchanges.Add(conv);
-
-            context.SaveChanges();
         }
 
         //Questo vale sia per le news che per le pratiche @Gianluca (Entrambe sono content)
-        private static void AddContentTestData(ContentContext context)
+        private static void AddContentTestData(MyAppContext context)
         {
 
             News news1 = new News((Consultant)users[1], "Titolo news 1", "Lorem ipsum.....");

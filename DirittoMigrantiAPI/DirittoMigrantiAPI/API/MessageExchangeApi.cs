@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Linq;
+using DirittoMigrantiAPI.Contexts;
 using DirittoMigrantiAPI.Controllers;
 using DirittoMigrantiAPI.Models;
-using DirittoMigrantiAPI.Models.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,11 @@ namespace DirittoMigrantiAPI.API
     [Route("api/conv")]
     public class MessageExchangeApi : MessageExchangesController
     {
-        private readonly MessageExchangesContext _context;
+        private readonly MyAppContext context;
 
-        public MessageExchangeApi(MessageExchangesContext context, UserContext userContext) : base(context.MessageExchanges)
+        public MessageExchangeApi(MyAppContext context) : base(context.MessageExchanges)
         {
-            this._context = context;
+            this.context = context;
         }
 
 
@@ -24,18 +25,14 @@ namespace DirittoMigrantiAPI.API
         [HttpPost("newC", Name = "NewConversation")]
         public IActionResult Create([FromBody] Message message)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return BadRequest();
+
 
             var messageExchange = NewConversation(message);
-
-            if (messageExchange == null)
-                return BadRequest();
+            if (messageExchange == null) return BadRequest();
 
             // Salvo
-            _context.SaveChanges();//TODO controlla eccezioni
+            context.SaveChanges();//TODO controlla eccezioni
 
             // Invio come risposta le info dell'utente appena creato
             return CreatedAtRoute("GetME", new { id = messageExchange.Id }, messageExchange);
@@ -55,11 +52,9 @@ namespace DirittoMigrantiAPI.API
                 return NotFound();
             }
 
-            if (user is Consultant || messageExchange.IsThisUserTheOwner(user))
-            {
-                return Ok(messageExchange);
-            }
-            else return NotFound();
+            if (!(user is Consultant || messageExchange.IsThisUserTheOwner(user))) return NotFound();
+
+            return Ok(messageExchange);
         }
 
         [Authorize(Roles = "Operator, Consultant")]
@@ -67,10 +62,11 @@ namespace DirittoMigrantiAPI.API
         public IActionResult GetListOrderedByLastUpdate()
         {
             var messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
-            if (messageExchange == null)
-            {
-                return NotFound();
-            }
+            var test = context.Messages.ToList();
+            messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
+
+            if (messageExchange == null) return NotFound();
+
             return Ok(messageExchange);
         }
 
@@ -79,10 +75,9 @@ namespace DirittoMigrantiAPI.API
         public IActionResult GetListOrderedByCreationDate()
         {
             var messageExchange = base.GetAllMessageExchangeByCreationDate();
-            if (messageExchange == null)
-            {
-                return NotFound();
-            }
+
+            if (messageExchange == null) return NotFound();
+
             return Ok(messageExchange);
         }
 

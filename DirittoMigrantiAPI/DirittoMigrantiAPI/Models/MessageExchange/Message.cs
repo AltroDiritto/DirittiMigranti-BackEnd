@@ -20,8 +20,10 @@ namespace DirittoMigrantiAPI.Models
         [Url]
         public string AttachmentURL { get; set; }
 
-        public MessageExchange WhereIBelong { get; set; }
+        public MessageExchange BelongingConv { get; set; }
 
+
+        public Message() { }
         public Message(User author, string messageContent)
         {
             this.Author = author;
