@@ -104,12 +104,21 @@ namespace DirittoMigrantiAPI
             {
                 //Id = IdGenerator(context),
                 Email = "operator1@example.com",
-                IsActive = true
+                IsActive = true,
+                Name = "Alex",
+                Surname = "Otto",
+                FiscalCode = "ALXTTX60S01A944D",
+                Job = "Operatore sociale",
+                Office = "Regione Toscana",
+                Phone = "123456789",
+                Location = "Firenze"
             };
             Consultant consultant = new Consultant
             {
                 // Id = IdGenerator(context),
-                Email = "consultant@example.com"
+                Email = "consultant@example.com",
+                Name="Mario",
+                Surname="Rossi"
             };
             var operator2 = new Operator
             {

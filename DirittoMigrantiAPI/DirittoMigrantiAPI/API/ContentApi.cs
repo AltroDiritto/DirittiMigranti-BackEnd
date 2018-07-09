@@ -11,7 +11,7 @@ namespace DirittoMigrantiAPI.API{    [Route("api/cont")]
         //public IActionResult SetStateAPI(bool newState)
         //{
         //    return BadRequest();
-        //}
+        //}        [HttpGet("getAllNews")]        public IActionResult GetAllNewsAPI(long contentId)        {           var res =context.Contents.Where((c)=> c is News).ToList();                return Ok(res);        }
 
         [HttpGet("get/{contentId}", Name = "Get")]
         public IActionResult Get(long contentId)        {
@@ -31,7 +31,7 @@ namespace DirittoMigrantiAPI.API{    [Route("api/cont")]
 
             if (!ModelState.IsValid) return BadRequest();
 
-            News newNews = NewNews(news);            if (newNews == null) return BadRequest();            context.SaveChanges();            return Ok(newNews);        }        [Authorize(Roles = "Consultant")]        [HttpDelete("delN/{contentId}", Name = "DeleteNews")]        public IActionResult DeleteNewsAPI(long contentId)        {
+            News newNews = NewNews(news);            if (newNews == null) return BadRequest();            context.SaveChanges();            return Ok(true);        }        [Authorize(Roles = "Consultant")]        [HttpDelete("delN/{contentId}", Name = "DeleteNews")]        public IActionResult DeleteNewsAPI(long contentId)        {
             var ris = DeleteNews(contentId);            context.SaveChanges();            return Ok(ris);        }
 
         //[Authorize(Roles = "Consultant")]
