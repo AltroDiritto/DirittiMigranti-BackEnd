@@ -30,7 +30,7 @@ namespace DirittoMigrantiAPI.Controllers
             }
             catch (ArgumentException) { return null; }
         }
-        
+
         public MessageExchange GetMessageExchange(long messageExchangeId)
         {
             return messageExchanges.Find(messageExchangeId);
@@ -69,7 +69,7 @@ namespace DirittoMigrantiAPI.Controllers
         {
             return messageExchanges.Where((conversation) => conversation.IsThisUserInTheConversation(user)).ToList();
         }
-        
+
         public List<MessageExchange> GetConversationsByOwner(User user)
         {
             if (user is Consultant) return null;
@@ -79,18 +79,19 @@ namespace DirittoMigrantiAPI.Controllers
 
         public List<MessageExchange> GetAllMessageExchangesOrderByLastUpdate()
         {
-            return messageExchanges.OrderBy((conversation) => conversation.GetLastUpdate()).ToList();
-            //.ThenBy() starred by user
+            return messageExchanges
+                                   .ToList();
         }
 
         public List<MessageExchange> GetAllMessageExchangeByCreationDate()
         {
             throw new NotImplementedException();
-        }      
+        }
         #endregion
 
         //LOG
-        protected void Log(string message, User user){
+        protected void Log(string message, User user)
+        {
             throw new NotImplementedException();
         }
 

@@ -7,11 +7,13 @@ using DirittoMigrantiAPI.Models;
 using DirittoMigrantiAPI.Models.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.API
 {
     [Route("api/user")]
+    [EnableCors("AllowSpecificOrigin")]
     public class UserControllerAPI : UserController, IConsultantAPI, IOperatorAPI
     {
         private readonly MyAppContext context;
@@ -96,11 +98,14 @@ namespace DirittoMigrantiAPI.API
             return Ok(allOperators);
         }
 
-        // [Authorize(Roles = "Consultant")]
-        [HttpPost("setOpState", Name = "SetOperatorState")]
-        public IActionResult SetOperatorStateAPI([FromForm] long userId, [FromForm] bool newState)
+         [Authorize(Roles = "Consultant")]
+        [HttpPost("setOpState/{userId}/{newState}", Name = "SetOperatorState")]
+        public IActionResult SetOperatorStateAPI( long userId, bool newState)
         {
-            return Ok(ChangeState(userId, newState));
+            var ris = ChangeState(userId, newState);
+            context.SaveChanges();
+
+            return Ok(ris);
         }
         #endregion
 

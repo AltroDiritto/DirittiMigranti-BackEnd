@@ -4,8 +4,6 @@ using DirittoMigrantiAPI;
 using DirittoMigrantiAPI.API;
 using DirittoMigrantiAPI.Controllers;
 using DirittoMigrantiAPI.Models;
-using DirittoMigrantiAPI.Models.Contexts;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 

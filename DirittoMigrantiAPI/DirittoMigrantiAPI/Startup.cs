@@ -57,6 +57,12 @@ namespace DirittoMigrantiAPI
             #endregion
 
             services.AddMvc();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                                  builder => builder.WithOrigins("http://localhost:8888"));
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
@@ -85,6 +91,7 @@ namespace DirittoMigrantiAPI
             }
 
             app.UseMvc();
+
         }
 
 
@@ -119,8 +126,8 @@ namespace DirittoMigrantiAPI
             #endregion
 
             #region Credentials
-            var authOperator1 = new UserAuth("operatore", "operatore", operator1.Id);
-            var authConsultant = new UserAuth("consultant", "consultant", consultant.Id);
+            var authOperator1 = new UserAuth("operatore", "b40xZboDIOtjmrtIBWFZAVaosEmQI7fDrKY+Nwvby7GNZs8st2aeDjnb17oEQuFYuFy3l/VBoy8hwfuPiXtj2EnvOaEuR4xuTkR33qLugKr4yeWh08", operator1.Id);
+            var authConsultant = new UserAuth("consultant", "MIIBOAIBAAJAcd+FVkVnv/EhGkyUJXXK+RgSYp01BY7LXoJPhiRpgU0xYTmLqbeoSCzG6rGF93Kxlq9eQUcPfndE8sUWmS8hwfuPiXtj2Eub12df", consultant.Id);
             var authOperator2 = new UserAuth("operatore2", "operatore2", operator2.Id);
 
             context.UsersAuth.Add(authOperator1);
@@ -141,10 +148,10 @@ namespace DirittoMigrantiAPI
 
             MessageExchange conv = new MessageExchange(firstMessage);
             context.MessageExchanges.Add(conv);
-            
+
             context.SaveChanges();
 
-           var test= context.MessageExchanges.ToList();
+            var test = context.MessageExchanges.ToList();
 
             //Message secondMessage = new Message(users[1], "Testo secondo");
 

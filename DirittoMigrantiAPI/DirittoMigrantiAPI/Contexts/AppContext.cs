@@ -44,8 +44,12 @@ namespace DirittoMigrantiAPI.Contexts
             modelBuilder.Entity<News>().HasBaseType<Content>();
             modelBuilder.Entity<Practice>().HasBaseType<Content>();
 
-            modelBuilder.Entity<News>().HasOne(n => n.Writer).WithMany(u => u.WrittenNews).OnDelete(DeleteBehavior.SetNull).IsRequired();
-            modelBuilder.Entity<Practice>().HasOne(c => c.Writer).WithMany(u => u.WrittenPractices).OnDelete(DeleteBehavior.SetNull).IsRequired();
+            modelBuilder.Entity<News>().HasOne(n => n.Writer)
+                        .WithMany(u => u.WrittenNews)
+                        .OnDelete(DeleteBehavior.SetNull).IsRequired();
+            modelBuilder.Entity<Practice>().HasOne(c => c.Writer)
+                        .WithMany(u => u.WrittenPractices)
+                        .OnDelete(DeleteBehavior.SetNull).IsRequired();
             #endregion
         }
 

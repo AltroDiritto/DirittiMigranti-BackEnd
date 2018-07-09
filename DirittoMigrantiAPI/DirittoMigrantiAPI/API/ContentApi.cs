@@ -1,7 +1,9 @@
 ﻿using System;using DirittoMigrantiAPI.Controllers;using DirittoMigrantiAPI.Models;using Microsoft.AspNetCore.Mvc;using System.Linq;using Microsoft.AspNetCore.Authorization;using System.Security.Claims;
 using DirittoMigrantiAPI.Contexts;
+using Microsoft.AspNetCore.Cors;
 
-namespace DirittoMigrantiAPI.API{    [Route("api/cont")]    public class ContentApi : ContentController, IPracticeAPI, INewsAPI    {        private readonly MyAppContext context;        public ContentApi(MyAppContext context) : base(context.Contents)        { this.context = context; }
+namespace DirittoMigrantiAPI.API{    [Route("api/cont")]
+    [EnableCors("AllowSpecificOrigin")]    public class ContentApi : ContentController, IPracticeAPI, INewsAPI    {        private readonly MyAppContext context;        public ContentApi(MyAppContext context) : base(context.Contents)        { this.context = context; }
 
         //A che serve questo metodo?
         //Non presente nell'UML
@@ -25,7 +27,7 @@ namespace DirittoMigrantiAPI.API{    [Route("api/cont")]    public class Cont
             if (user == null) return BadRequest();
 
             //TODO IWriter
-            news.Writer = (Consultant)user; 
+            news.Writer = (Consultant)user;
 
             if (!ModelState.IsValid) return BadRequest();
 
@@ -40,22 +42,7 @@ namespace DirittoMigrantiAPI.API{    [Route("api/cont")]    public class Cont
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        #endregion
+        #endregion
         #region PRACTICE        [HttpGet("getPuP/{contentId}", Name = "GetPublicPractice")]
         public IActionResult GetPublicPracticeAPI(long contentId)        {            Practice practice = base.GetPublicPractice(contentId);            if (practice == null)                return NotFound();            return Ok(practice);        }        [Authorize(Roles = "Consultant, Operator")]
         [HttpGet("getPrP/{contentId}", Name = "GetPrivatePractice")]        public IActionResult GetPrivatePracticeAPI(long contentId)        {            Practice practice = base.GetPrivatePractice(contentId);            if (practice == null)                return NotFound();            return Ok(practice);        }        [Authorize(Roles = "Consultant")]        [HttpPost("newP", Name = "NewPractice")]        public IActionResult CreatePracticeAPI([FromBody] Practice practice)        {            if (!ModelState.IsValid)            {                return BadRequest();            }            Practice checkPractice = NewPractice(practice);            if (checkPractice == null)                return BadRequest();            context.SaveChanges();            return Ok(NewPractice(practice));        }        [Authorize(Roles = "Consultant")]        [HttpDelete("delP/{contentId}", Name = "DeletePractice")]        public IActionResult DeletePracticeAPI(long contentId)        {

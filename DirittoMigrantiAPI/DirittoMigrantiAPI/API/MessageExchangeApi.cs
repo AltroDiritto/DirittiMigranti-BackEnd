@@ -6,11 +6,13 @@ using DirittoMigrantiAPI.Controllers;
 using DirittoMigrantiAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DirittoMigrantiAPI.API
 {
     [Route("api/conv")]
+    [EnableCors("AllowSpecificOrigin")]
     public class MessageExchangeApi : MessageExchangesController
     {
         private readonly MyAppContext context;
@@ -39,8 +41,7 @@ namespace DirittoMigrantiAPI.API
             return CreatedAtRoute("GetME", new { id = messageExchange.Id }, messageExchange);
         }
 
-        [Authorize(Roles = "Operator, Consultant")]
-        //NOTA: il Name serve per la chiamata da qua dentro.        
+        [Authorize(Roles = "Operator, Consultant")]        
         [HttpGet("getME/{id}", Name = "GetMessageExchange")]
         public IActionResult GetById(long id)
         {
@@ -57,11 +58,12 @@ namespace DirittoMigrantiAPI.API
             return Ok(messageExchange);
         }
 
-        [Authorize(Roles = "Operator, Consultant")]
+       // [Authorize(Roles = "Operator, Consultant")]
         [HttpGet("getMELastU", Name = "GetAllMessageExchangesOrderByLastUpdate")]
         public IActionResult GetListOrderedByLastUpdate()
         {
             var messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
+
             //var test = context.Messages.ToList();
             //messageExchange = base.GetAllMessageExchangesOrderByLastUpdate();
 
